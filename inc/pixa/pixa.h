@@ -39,28 +39,35 @@ typedef struct
     Color *data;
 } Texture;
 
-Texture *create_texture(int width, int height, bool filtered, bool clamp);
-void update_texture(Texture *texture);
+Texture create_texture(int width, int height, bool filtered, bool clamp);
+void update_texture(Texture texture);
+
+void draw_pixel_to_texture (Texture texture, int x, int y, Color color);
+void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color);
+void draw_texture(Texture texture, int x, int y);
+void clear_texture(Texture texture, Color color);
 
 void create_engine(int width, int height);
 void start_engine();
+void destroy_engine();
+void exit_engine();
 
 int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)());
 void destroy_scene(int scene);
 
+void create_layers(int count);
+void destroy_layers(int count);
 
 void set_scene_active(int scene, bool active);
 bool set_scene_layer(int scene, int layer);
 bool set_layer(int layer);
 
-void create_layers(int count);
-void destroy_layers(int count);
+double get_elapsed_time();
+double get_delta_time();
+double get_fps();
 
-void draw_pixel_to_texture (Texture *texture, int x, int y, Color color);
-void draw_texture(Texture* texture, int x, int y);
-void clear_texture(Texture *texture, Color color);
-
-void draw_pixel (int x, int y, Color color);
-void draw_background(Color color);
+void draw_pixel(int x, int y, Color color);
+void draw_line(int x1, int y1, int x2, int y2, Color color);
+void clear_layer(Color color);
 
 #endif

@@ -16,6 +16,7 @@
                 "-lGdi32",
                 "-lShell32",
                 "-lopengl32",
+                "-lglew32",
                 
                 "-g",
                 "-O0",

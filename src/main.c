@@ -10,10 +10,9 @@ void main_onCreate()
 
 void main_onUpdate()
 {
-    draw_background(COLOR_DARK_GRAY);
-    draw_pixel(10, 10, COLOR_WHITE);
+    clear_layer(COLOR_DARK_GRAY);
 
-    // draw_texture(t);
+    draw_line(0, 250, 500, 250, COLOR_WHITE);
 }
 
 void main_onDestroy()
@@ -27,4 +26,6 @@ int main()
     int main_scene = create_scene(main_onCreate, main_onUpdate, main_onDestroy);
 
     start_engine();
+    exit_engine();
+    destroy_engine();
 }

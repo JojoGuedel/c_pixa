@@ -10,6 +10,8 @@
         "xhash": "c",
         "xiosbase": "c",
         "xstring": "c",
-        "xtree": "c"
+        "xtree": "c",
+        "array": "c",
+        "xutility": "c"
     }
 }
