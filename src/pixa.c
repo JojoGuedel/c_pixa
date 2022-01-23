@@ -17,6 +17,8 @@ static int height;
 static Scene *scenes;
 static size_t scenes_c;
 
+static Color target_color;
+
 static int target_layer;
 // TODO: make a struct layers for overview
 static Texture *layers;
@@ -77,7 +79,6 @@ void draw_texture(Texture texture, int x, int y)
 {
     glBindTexture(GL_TEXTURE_2D, texture.id);
     glBegin(GL_QUADS);
-    // TODO: tint
     // glColor4ub(255, 255, 255, 255);
     // TODO: scale
     glTexCoord2f(0.0f /** scale.x */+ x, 0.0f /** scale.y */+ y);
@@ -104,19 +105,20 @@ void draw_pixel_to_texture(Texture texture, int x, int y, Color color)
 
 void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color) 
 {
-    if (y1 == y2)
+    int dx = x2 - x1;
+    int dy = y2 - y1;
+
+    if (dy == 0)
     {
-        int tx = x1 < x2? x1 : x2;
-        for(int x = 0; x < tx && x < texture.width; x++)
-            texture.data[y1 * texture.width + x] = color;
-        return;
+        if (dx > 0)
+        {
+            for(int x = x1; x < x2; x++)
+                draw_pixel_to_texture(texture, x, y1, color);
+        }
     }
-    if (y1 == y2)
+
+    if (dx == 0)
     {
-        int ty = y1 < y2? y1 : y2;
-        for(int y = 0; y < ty && y < texture.height; y++)
-            texture.data[y * texture.width + x1] = color;
-        return;
     }
 }
 
@@ -164,6 +166,8 @@ void create_engine(int w, int h)
     height = h;
 
     scenes_c = 0;
+
+    target_color = COLOR_WHITE;
 
     target_layer = 0;
     layers_c = 0;
@@ -334,6 +338,20 @@ bool set_layer(int layer)
     return true;
 }
 
+void set_color(Color color) {
+    target_color = color;
+}
+
+int get_width()
+{
+    return width;
+}
+
+int get_height()
+{
+    return height;
+}
+
 double get_elapsed_time()
 {
     return elapsed_time;
@@ -349,14 +367,14 @@ double get_fps()
     return 1.0 / delta_time;
 }
 
-void draw_pixel(int x, int y, Color color)
+void draw_pixel(int x, int y)
 {
-    draw_pixel_to_texture(layers[target_layer], x, y, color);
+    draw_pixel_to_texture(layers[target_layer], x, y, target_color);
 }
 
-void draw_line(int x1, int y1, int x2, int y2, Color color)
+void draw_line(int x1, int y1, int x2, int y2)
 {
-    draw_line_to_texture(layers[target_layer], x1, y1, x2, y2, color);
+    draw_line_to_texture(layers[target_layer], x1, y1, x2, y2, target_color);
 }
 
 void clear_layer(Color color)

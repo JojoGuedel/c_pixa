@@ -31,6 +31,7 @@
 
 typedef struct
 {
+    // TODO: tint
     int layer;
     bool is_active;
 
@@ -79,13 +80,16 @@ void destroy_layers(int count);
 void set_scene_active(int scene, bool active);
 bool set_scene_layer(int scene, int layer);
 bool set_layer(int layer);
+void set_color(Color color);
 
+int get_width();
+int get_height();
 double get_elapsed_time();
 double get_delta_time();
 double get_fps();
 
-void draw_pixel(int x, int y, Color color);
-void draw_line(int x1, int y1, int x2, int y2, Color color);
-void clear_layer(Color color);
+void draw_pixel(int x, int y);
+void draw_line(int x1, int y1, int x2, int y2);
+void clear_layer(Color clear);
 
 #endif

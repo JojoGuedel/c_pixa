@@ -10,9 +10,16 @@ void main_onCreate()
 
 void main_onUpdate()
 {
-    clear_layer(COLOR_DARK_GREEN);
+    clear_layer(COLOR_VERY_DARK_GREY);
 
-    draw_line(0, 250, 500, 250, COLOR_WHITE);
+    for(int i = 0; i < get_width(); i++)
+        for(int j = 0; j < get_height(); j++)
+            if (i == j)
+                draw_pixel(i, j);
+
+
+    draw_pixel(20, 20);
+    // draw_pixel(20, 20);
 }
 
 void main_onDestroy()
