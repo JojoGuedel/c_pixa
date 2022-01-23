@@ -10,7 +10,7 @@ void main_onCreate()
 
 void main_onUpdate()
 {
-    clear_layer(COLOR_DARK_GRAY);
+    clear_layer(COLOR_DARK_GREEN);
 
     draw_line(0, 250, 500, 250, COLOR_WHITE);
 }
