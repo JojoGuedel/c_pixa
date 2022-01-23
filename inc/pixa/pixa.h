@@ -14,6 +14,8 @@
 typedef struct
 {
     int layer;
+    bool is_active;
+
     void (*onCreate)();
     void (*onUpdate)();
     void (*onDestroy)();
@@ -32,24 +34,33 @@ typedef struct
     int width;
     int height;
 
+    unsigned int id;
+
     Color *data;
 } Texture;
 
-Texture *create_texture(int width, int height);
+Texture *create_texture(int width, int height, bool filtered, bool clamp);
+void update_texture(Texture *texture);
 
 void create_engine(int width, int height);
 void start_engine();
 
 int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)());
-void destroy_scene(int id);
+void destroy_scene(int scene);
 
-bool set_scene_layer(int id, int l);
-bool set_layer(int l);
+
+void set_scene_active(int scene, bool active);
+bool set_scene_layer(int scene, int layer);
+bool set_layer(int layer);
 
 void create_layers(int count);
 void destroy_layers(int count);
 
+void draw_pixel_to_texture (Texture *texture, int x, int y, Color color);
+void draw_texture(Texture* texture, int x, int y);
+void clear_texture(Texture *texture, Color color);
 
-void draw_background(Color c);
+void draw_pixel (int x, int y, Color color);
+void draw_background(Color color);
 
 #endif
