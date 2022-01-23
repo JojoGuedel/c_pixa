@@ -1,8 +1,19 @@
 #ifndef PXIA_H
 #define PXIA_H
 
+#include <stdint.h>
+#include <stdbool.h>
+
+#define COLOR_WHITE             (Color) {255, 255, 255, 255}
+#define COLOR_RED               (Color) {255,   0,   0, 255}
+#define COLOR_GREEN             (Color) {  0, 255,   0, 255}
+#define COLOR_BLUE              (Color) {  0,   0, 255, 255}
+#define COLOR_DARK_GRAY         (Color) { 40,  40,  40, 255}
+#define COLOR_BLACK             (Color) {  0,   0,   0, 255}
+
 typedef struct
 {
+    int layer;
     void (*onCreate)();
     void (*onUpdate)();
     void (*onDestroy)();
@@ -10,10 +21,10 @@ typedef struct
 
 typedef struct
 {
-    float r;
-    float g; 
-    float b;
-    float a;
+    uint8_t r;
+    uint8_t g; 
+    uint8_t b;
+    uint8_t a;
 } Color;
 
 typedef struct
@@ -24,23 +35,20 @@ typedef struct
     Color *data;
 } Texture;
 
-
-const static Color COLOR_WHITE        = {1.0, 1.0, 1.0, 1.0};
-const static Color COLOR_RED          = {1.0,   0,   0, 1.0};
-const static Color COLOR_GREEN        = {  0, 1.0,   0, 1.0};
-const static Color COLOR_BLUE         = {  0,   0, 1.0, 1.0};
-const static Color COLOR_DARK_GRAY    = {0.1, 0.1, 0.1, 1.0};
-const static Color COLOR_BLACK        = {  0,   0,   0, 1.0};
-
+Texture *create_texture(int width, int height);
 
 void create_engine(int width, int height);
 void start_engine();
 
-void create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)());
+int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)());
+void destroy_scene(int id);
 
-Color create_color(int r, int g, int b, int a);
+bool set_scene_layer(int id, int l);
+bool set_layer(int l);
 
-Texture *create_texture(int width, int height);
+void create_layers(int count);
+void destroy_layers(int count);
+
 
 void draw_background(Color c);
 
