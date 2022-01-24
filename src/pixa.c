@@ -377,6 +377,11 @@ void set_clear_color(Color color)
     clear_texture(target_clear_color, color);
 }
 
+void set_title(const char *title)
+{
+    glfwSetWindowTitle(window, title);
+}
+
 int get_width()
 {
     return world_width;
@@ -407,9 +412,9 @@ double get_delta_time()
     return delta_time;
 }
 
-double get_fps()
+float get_fps()
 {
-    return 1.0 / delta_time;
+    return 1.0f / delta_time;
 }
 
 void draw_pixel(int x, int y)
