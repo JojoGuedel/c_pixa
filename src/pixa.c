@@ -12,6 +12,9 @@ static bool active;
 static int screen_width;
 static int screen_height;
 
+static int world_width;
+static int world_height;
+
 static int res_x;
 static int res_y;
 
@@ -21,6 +24,7 @@ static Scene *scenes;
 static size_t scenes_c;
 
 static Color target_color;
+static Texture target_clear_color;
 
 static int target_layer;
 static Texture *layers;
@@ -143,8 +147,7 @@ void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsi
     printf("[DEBUG] gl: %s\n", msg);
 }
 
-// TODO: refactor names
-void create_engine(int w, int h, int r_x, int r_y)
+void create_engine(int s_w, int s_h, int r_x, int r_y)
 {
     // TODO: Error checking
     // TODO: Logging
@@ -157,7 +160,7 @@ void create_engine(int w, int h, int r_x, int r_y)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     
-    window = glfwCreateWindow(w, h, "pixa", NULL, NULL);
+    window = glfwCreateWindow(s_w, s_h, "pixa", NULL, NULL);
     glfwMakeContextCurrent(window);
 
     // init glew
@@ -172,8 +175,11 @@ void create_engine(int w, int h, int r_x, int r_y)
     // init all globals
     active = true;
 
-    screen_width = w;
-    screen_height = h;
+    screen_width = s_w;
+    screen_height = s_h;
+
+    world_width = s_w / r_x; 
+    world_height = s_h / r_y;
 
     res_x = r_x;
     res_y = r_y;
@@ -181,6 +187,9 @@ void create_engine(int w, int h, int r_x, int r_y)
     scenes_c = 0;
 
     target_color = COLOR_WHITE;
+
+    target_clear_color = create_texture(world_width, world_height, false, false);
+    set_clear_color(COLOR_BLACK);
 
     target_layer = 0;
     layers_c = 0;
@@ -315,7 +324,7 @@ void create_layers(int count)
     layers = temp;
 
     for (int i = 0; i < count; i++)
-        layers[layers_c + i] = create_texture(screen_width, screen_height, false, true);
+        layers[layers_c + i] = create_texture(world_width, world_height, false, false);
 
     layers_c += count;
 }
@@ -358,18 +367,24 @@ bool set_layer(int layer)
     return true;
 }
 
-void set_color(Color color) {
+void set_color(Color color) 
+{
     target_color = color;
+}
+
+void set_clear_color(Color color) 
+{
+    clear_texture(target_clear_color, color);
 }
 
 int get_width()
 {
-    return screen_width / res_x;
+    return world_width;
 }
 
 int get_height()
 {
-    return screen_height / res_y;
+    return world_height;
 }
 
 int get_screen_width()
@@ -407,7 +422,7 @@ void draw_pixel(int x, int y)
 //     draw_line_to_texture(layers[target_layer], x1, y1, x2, y2, target_color);
 // }
 
-void clear_layer(Color color)
+void clear_layer()
 {
-    clear_texture(layers[target_layer], color);
+    memcpy(layers[target_layer].data, target_clear_color.data, target_clear_color.width * target_clear_color.height * sizeof(Color));
 }

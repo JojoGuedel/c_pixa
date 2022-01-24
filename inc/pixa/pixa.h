@@ -4,6 +4,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+// TODO: make descriptions for everything
+
 #define COLOR_GREY                  (Color) {192, 192, 192, 255}
 #define COLOR_DARK_GREY             (Color) {128, 128, 128, 255}
 #define COLOR_VERY_DARK_GREY        (Color) { 64,  64,  64, 255}
@@ -61,13 +63,13 @@ typedef struct
     Color *data;
 } Texture;
 
-Texture create_texture(int width, int height, bool filtered, bool clamp);
-void update_texture(Texture texture);
-
-void draw_pixel_to_texture (Texture texture, int x, int y, Color color);
-void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color);
-void draw_texture(Texture texture, int x, int y);
-void clear_texture(Texture texture, Color color);
+// there is no use for textures for the user currently
+// Texture create_texture(int width, int height, bool filtered, bool clamp);
+// void update_texture(Texture texture);
+// void draw_pixel_to_texture (Texture texture, int x, int y, Color color);
+// void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color);
+// void draw_texture(Texture texture, int x, int y);
+// void clear_texture(Texture texture, Color color);
 
 void create_engine(int screen_width, int screen_height, int res_x, int res_y);
 void start_engine();
@@ -84,6 +86,7 @@ void set_scene_active(int scene, bool active);
 bool set_scene_layer(int scene, int layer);
 bool set_layer(int layer);
 void set_color(Color color);
+void set_clear_color(Color color);
 
 int get_width();
 int get_height();
@@ -92,7 +95,7 @@ double get_delta_time();
 double get_fps();
 
 void draw_pixel(int x, int y);
-void draw_line(int x1, int y1, int x2, int y2);
-void clear_layer(Color clear);
+// void draw_line(int x1, int y1, int x2, int y2);
+void clear_layer();
 
 #endif
