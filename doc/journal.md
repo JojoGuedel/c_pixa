@@ -11,9 +11,7 @@ Das Einführen scale in den Textures löste den Bug mit den weissen Linien.
 Performance Verbesserungen durch die Verwendung von "memcpy" beim clearen von layers.
 
 Ich habe eine kleine scene kreiert um pixa zu testen:
-<p align="center">
-```c
-
+```
 void main_onUpdate()
 {
     clear_layer();
@@ -33,7 +31,6 @@ int main()
     start_engine();
 }
 ```
-</p>
 
 ![engine_test](./img/engine_test_24.02.2022.png)
 
