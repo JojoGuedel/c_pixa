@@ -12,14 +12,11 @@ void main_onUpdate()
 {
     clear_layer(COLOR_VERY_DARK_GREY);
 
-    for(int i = 0; i < get_width(); i++)
-        for(int j = 0; j < get_height(); j++)
-            if (i == j)
-                draw_pixel(i, j);
+    for (int i = 9; i < get_width(); i += 10)
+        for(int j = 9; j < get_height(); j += 10)
+            draw_pixel(j, i);
 
-
-    draw_pixel(20, 20);
-    // draw_pixel(20, 20);
+    // printf("%f\n", get_fps());
 }
 
 void main_onDestroy()
@@ -28,7 +25,7 @@ void main_onDestroy()
 
 int main()
 {
-    create_engine(500, 500);
+    create_engine(500, 500, 2, 2);
 
     int main_scene = create_scene(main_onCreate, main_onUpdate, main_onDestroy);
 

@@ -53,6 +53,9 @@ typedef struct
     int width;
     int height;
 
+    float scale_x;
+    float scale_y;
+
     unsigned int id;
 
     Color *data;
@@ -66,7 +69,7 @@ void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color
 void draw_texture(Texture texture, int x, int y);
 void clear_texture(Texture texture, Color color);
 
-void create_engine(int width, int height);
+void create_engine(int screen_width, int screen_height, int res_x, int res_y);
 void start_engine();
 void destroy_engine();
 void exit_engine();

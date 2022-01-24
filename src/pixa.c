@@ -9,8 +9,11 @@
 
 static bool active;
 
-static int width;
-static int height;
+static int screen_width;
+static int screen_height;
+
+static int res_x;
+static int res_y;
 
 // TODO: make resolution scaleable
 
@@ -20,7 +23,6 @@ static size_t scenes_c;
 static Color target_color;
 
 static int target_layer;
-// TODO: make a struct layers for overview
 static Texture *layers;
 static size_t layers_c;
 
@@ -33,14 +35,18 @@ static GLFWwindow* window;
 
 Texture create_texture(int width, int height, bool filtered, bool clamp)
 {
-    Texture tex;
+    Texture texture;
 
-    tex.width = width;
-    tex.height = height;
-    tex.data = malloc(width * height * sizeof(Color));
+    texture.width = width;
+    texture.height = height;
 
-    glGenTextures(1, &tex.id);
-    glBindTexture(GL_TEXTURE_2D, tex.id);
+    texture.scale_x = 1.0f / res_x;
+    texture.scale_y = 1.0f / res_y;
+
+    texture.data = malloc(width * height * sizeof(Color));
+
+    glGenTextures(1, &texture.id);
+    glBindTexture(GL_TEXTURE_2D, texture.id);
 
     if (filtered)
     {
@@ -66,7 +72,7 @@ Texture create_texture(int width, int height, bool filtered, bool clamp)
 
     // I don't know what this does yet so...
     // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    return tex;
+    return texture;
 }
 
 void update_texture(Texture texture)
@@ -80,17 +86,16 @@ void draw_texture(Texture texture, int x, int y)
     glBindTexture(GL_TEXTURE_2D, texture.id);
     glBegin(GL_QUADS);
     // glColor4ub(255, 255, 255, 255);
-    // TODO: scale
-    glTexCoord2f(0.0f /** scale.x */+ x, 0.0f /** scale.y */+ y);
+    glTexCoord2f(0.0f * texture.scale_x + x, 0.0f * texture.scale_y + y);
     glVertex3f(-1.0f, 1.0f, 0.0f);
 
-    glTexCoord2f(0.0f /** scale.x */+ x, 1.0f * /*scale.y */+ y);
+    glTexCoord2f(0.0f * texture.scale_x + x, 1.0f * texture.scale_y + y);
     glVertex3f(-1.0f, -1.0f , 0.0f);
 
-    glTexCoord2f(1.0f /** scale.x */+ x, 1.0f /** scale.y */+ y);
+    glTexCoord2f(1.0f * texture.scale_x + x, 1.0f * texture.scale_y + y);
     glVertex3f(1.0f , -1.0f, 0.0f);
 
-    glTexCoord2f(1.0f /** scale.x */+ x, 0.0f /** scale.y */+ y);
+    glTexCoord2f(1.0f * texture.scale_x + x, 0.0f * texture.scale_y + y);
     glVertex3f(1.0f, 1.0f, 0.0f);
     glEnd();
 }
@@ -99,30 +104,30 @@ void draw_pixel_to_texture(Texture texture, int x, int y, Color color)
 {
     if (x < 0 || y < 0 || x >= texture.width || y >= texture.height)
         return;
-    
+
     texture.data[y * texture.width + x] = color;
 }
 
-void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color) 
-{
-    int dx = x2 - x1;
-    int dy = y2 - y1;
+// void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color)
+// {
+//     int dx = x2 - x1;
+//     int dy = y2 - y1;
 
-    if (dy == 0)
-    {
-        if (dx > 0)
-        {
-            for(int x = x1; x < x2; x++)
-                draw_pixel_to_texture(texture, x, y1, color);
-        }
-    }
+//     if (dy == 0)
+//     {
+//         if (dx > 0)
+//         {
+//             for(int x = x1; x < x2; x++)
+//                 draw_pixel_to_texture(texture, x, y1, color);
+//         }
+//     }
 
-    if (dx == 0)
-    {
-    }
-}
+//     if (dx == 0)
+//     {
+//     }
+// }
 
-void clear_texture(Texture texture, Color color) 
+void clear_texture(Texture texture, Color color)
 {
     for(int i = 0; i < texture.width * texture.height; i++)
         texture.data[i] = color;
@@ -138,32 +143,40 @@ void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsi
     printf("[DEBUG] gl: %s\n", msg);
 }
 
-void create_engine(int w, int h)
-{   
+// TODO: refactor names
+void create_engine(int w, int h, int r_x, int r_y)
+{
     // TODO: Error checking
     // TODO: Logging
+
+    // init glfw
     glfwSetErrorCallback(glfw_error_callback);
 
     glfwInit();
+    
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
+    
     window = glfwCreateWindow(w, h, "pixa", NULL, NULL);
     glfwMakeContextCurrent(window);
 
+    // init glew
     if (glewInit() != GLEW_OK)
         printf("[ERROR]: failed to initialize glew.\n");
-    glEnable(GL_DEBUG_OUTPUT);
+    
     glDebugMessageCallback(gl_debug_callback, NULL);
+    
+    glEnable(GL_DEBUG_OUTPUT);
     glEnable(GL_TEXTURE_2D);
-    // I don't know what this does yet so...
-    // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 
-    // glViewport(0, 0, width, height);
-
+    // init all globals
     active = true;
 
-    width = w;
-    height = h;
+    screen_width = w;
+    screen_height = h;
+
+    res_x = r_x;
+    res_y = r_y;
 
     scenes_c = 0;
 
@@ -175,6 +188,11 @@ void create_engine(int w, int h)
 
     delta_time = 0;
     elapsed_time = glfwGetTime();
+
+    // TODO: move this to resize event
+    glViewport(0, 0, screen_width, screen_height);
+    // I don't know what this does yet so...
+    // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
 
 void destroy_engine()
@@ -198,13 +216,14 @@ void exit_engine()
 void start_engine()
 {
     // TODO: multithreading
-    
+
     while (active)
     {
         delta_time = glfwGetTime() - elapsed_time;
         elapsed_time = glfwGetTime();
 
         glfwPollEvents();
+        // TODO: handle events
 
         for(int i = 0; i < scenes_c; i++)
         {
@@ -212,11 +231,12 @@ void start_engine()
                 continue;
 
             if (!set_layer(scenes[i].layer))
-                set_layer(layers_c - 1); 
+                set_layer(layers_c - 1);
 
             scenes[i].onUpdate();
         }
 
+        // TODO: move this to prepare_drawing()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
@@ -272,7 +292,7 @@ int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
     return scenes_c++;
 }
 
-void destroy_scene(int id) 
+void destroy_scene(int id)
 {
     scenes[id].onDestroy();
 
@@ -295,7 +315,7 @@ void create_layers(int count)
     layers = temp;
 
     for (int i = 0; i < count; i++)
-        layers[layers_c + i] = create_texture(width, height, false, true);
+        layers[layers_c + i] = create_texture(screen_width, screen_height, false, true);
 
     layers_c += count;
 }
@@ -320,11 +340,11 @@ void set_scene_active(int scene, bool active)
         scenes[scene].is_active = active;
 }
 
-bool set_scene_layer(int scene, int layer) 
+bool set_scene_layer(int scene, int layer)
 {
     if (layer >= layers_c || layer < 0)
         return false;
-    
+
     scenes[scene].layer = layer;
     return true;
 }
@@ -344,12 +364,22 @@ void set_color(Color color) {
 
 int get_width()
 {
-    return width;
+    return screen_width / res_x;
 }
 
 int get_height()
 {
-    return height;
+    return screen_height / res_y;
+}
+
+int get_screen_width()
+{
+    return screen_width;
+}
+
+int get_screen_height()
+{
+    return screen_height;
 }
 
 double get_elapsed_time()
@@ -372,10 +402,10 @@ void draw_pixel(int x, int y)
     draw_pixel_to_texture(layers[target_layer], x, y, target_color);
 }
 
-void draw_line(int x1, int y1, int x2, int y2)
-{
-    draw_line_to_texture(layers[target_layer], x1, y1, x2, y2, target_color);
-}
+// void draw_line(int x1, int y1, int x2, int y2)
+// {
+//     draw_line_to_texture(layers[target_layer], x1, y1, x2, y2, target_color);
+// }
 
 void clear_layer(Color color)
 {

@@ -12,6 +12,11 @@
         "xstring": "c",
         "xtree": "c",
         "array": "c",
-        "xutility": "c"
+        "xutility": "c",
+        "iomanip": "c",
+        "istream": "c",
+        "ostream": "c",
+        "xlocmon": "c",
+        "xlocnum": "c"
     }
 }
