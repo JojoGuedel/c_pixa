@@ -11,11 +11,9 @@ void main_onUpdate()
 {
     clear_layer();
 
-    // for (int i = 0; i < width; i += 10)
-    //     for(int j = 0; j < height; j += 10)
-    //         draw_pixel(j, i);
-
-    // printf("%f\n", framerate);
+    for (int i = 0; i < 1000; i += 10)
+        for(int j = 0; j < 1000; j += 10)
+            draw_pixel(j, i);
 }
 
 void main_onDestroy()

@@ -109,13 +109,20 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     target_clear_color = create_texture(world_width, world_height, false, false);
     set_clear_color(COLOR_BLACK);
 
+    // init layer 0
     Texture *draw_target = create_texture(w_w / r_x, w_h / r_y, false, false);
     draw_target->scale_x = 1.0f / r_x;
     draw_target->scale_y = 1.0f / r_y;
+
+    layer_count = 1;
+    layers = malloc(sizeof(Layer));
+    layers[0].layer = 0;
+    layers[0].texture = draw_target;
+
+    layer_draw_stack_count = 1;
+    layer_draw_stack = malloc(sizeof(Layer *));
+    layer_draw_stack[0] = layers;
     
-    layer_count = 0;
-    layer_draw_stack_count = 0;
-    create_layer(0, draw_target);
     set_layer(0);
 
     // TODO: move this to resize event
@@ -200,8 +207,8 @@ int create_layer(int layer, Texture *render_target)
     {
         Layer *temp = malloc((layer_count + 1) * sizeof(Layer));
         memcpy(temp, layers, layer_count * sizeof(Layer));
-        free(layer);
-        layer = temp;
+        free(layers);
+        layers = temp;
 
         insert = layer_count;
     }
@@ -244,7 +251,7 @@ bool destroy_layer(int id)
 
     for(int i = 0; i < layer_count; i++)
     {
-        if (layer_draw_stack[i] == id)
+        if (layer_draw_stack[i] == layers + id)
         {
             Layer **temp = malloc((layer_count - 1) * sizeof(Layer *));
 
