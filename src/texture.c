@@ -8,7 +8,7 @@
 
 Texture *create_texture(int width, int height, bool filtered, bool clamp)
 {
-    Texture *texture;
+    Texture *texture = malloc(sizeof(Texture));
 
     texture->width = width;
     texture->height = height;
@@ -82,6 +82,7 @@ void update_texture(Texture *texture)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width, texture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data);
 }
 
+// TODO: maybe rename texture to sprite and store x and y in the sprite
 void draw_texture(Texture *texture, int x, int y)
 {
     glBindTexture(GL_TEXTURE_2D, texture->id);

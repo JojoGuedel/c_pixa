@@ -3,8 +3,6 @@
 
 typedef struct
 {
-    // TODO: tint
-    int layer;
     bool is_active;
 
     void (*onCreate)();

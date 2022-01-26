@@ -6,9 +6,9 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "Pixa/core.h"
+#include "Pixa/layer.h"
 #include "Pixa/scene.h"
 #include "Pixa/texture.h"
-
 
 static bool active;
 
@@ -22,6 +22,9 @@ static int res_x;
 static int res_y;
 
 // TODO: make resolution scaleable
+static double elapsed_time;
+static double delta_time;
+
 
 static Scene *scenes;
 static size_t scene_c;
@@ -29,16 +32,22 @@ static size_t scene_c;
 static Color target_color;
 static Texture *target_clear_color;
 
-static int target_layer;
-static Texture **layers;
-static size_t layer_c;
+// static int target_layer;
+// static Texture **layers;
+// static size_t layer_c;
 
-static double elapsed_time;
-static double delta_time;
+Layer *layers;
+size_t layer_count;
+
+Layer *layer_target;
+Layer **layer_draw_stack;
+size_t layer_draw_stack_count;
 
 // TODO: implement textures for gpu (olc::Decal)
 
 static GLFWwindow* window;
+
+
 
 
 void glfw_error_callback(int error, const char *desc)
@@ -51,6 +60,8 @@ void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsi
     printf("[DEBUG] gl: %s\n", msg);
 }
 
+#pragma region engine
+// TODO: refactor and integrate with params.h
 void create_engine(int w_w, int w_h, int r_x, int r_y)
 {
     // TODO: Error checking
@@ -88,6 +99,9 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     res_x = r_x;
     res_y = r_y;
 
+    delta_time = 0;
+    elapsed_time = glfwGetTime();
+
     scene_c = 0;
 
     target_color = COLOR_WHITE;
@@ -95,12 +109,14 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     target_clear_color = create_texture(world_width, world_height, false, false);
     set_clear_color(COLOR_BLACK);
 
-    target_layer = 0;
-    layer_c = 0;
-    create_layers(1);
-
-    delta_time = 0;
-    elapsed_time = glfwGetTime();
+    Texture *draw_target = create_texture(w_w / r_x, w_h / r_y, false, false);
+    draw_target->scale_x = 1.0f / r_x;
+    draw_target->scale_y = 1.0f / r_y;
+    
+    layer_count = 0;
+    layer_draw_stack_count = 0;
+    create_layer(0, draw_target);
+    set_layer(0);
 
     // TODO: move this to resize event
     glViewport(0, 0, window_width, window_height);
@@ -114,9 +130,8 @@ void destroy_engine()
         scenes[i].onDestroy();
     free(scenes);
 
-    for(int i = 0; i < layer_c; i++)
-        free(layers[i]->data);
     free(layers);
+    free(layer_draw_stack);
 
     glfwTerminate();
 }
@@ -138,9 +153,6 @@ void start_engine()
             if (!scenes[i].is_active)
                 continue;
 
-            if (!set_layer(scenes[i].layer))
-                set_layer(layer_c - 1);
-
             scenes[i].onUpdate();
         }
 
@@ -148,10 +160,10 @@ void start_engine()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for(int i = 0; i < layer_c; i++)
+        for(int i = 0; i < layer_count; i++)
         {
-            update_texture(layers[i]);
-            draw_texture(layers[i], 0, 0);
+            update_texture(layer_draw_stack[i]->texture);
+            draw_texture(layer_draw_stack[i]->texture, 0, 0);
         }
 
         glfwSwapBuffers(window);
@@ -170,6 +182,101 @@ void stop_engine()
 {
     active = false;
 }
+#pragma endregion
+
+#pragma region layers
+int create_layer(int layer, Texture *render_target)
+{
+    int insert = -1;
+
+    for (int i = 0; i < scene_c; i++)
+        if (layers[i].texture == NULL)
+        {
+            insert =  i;
+            break;
+        }
+
+    if (insert == -1)
+    {
+        Layer *temp = malloc((layer_count + 1) * sizeof(Layer));
+        memcpy(temp, layers, layer_count * sizeof(Layer));
+        free(layer);
+        layer = temp;
+
+        insert = layer_count;
+    }
+
+    // create the new layer
+    layers[insert].layer = layer;
+
+    if (render_target == NULL)
+        layers[insert].texture = create_texture(world_width, world_height, false, false);
+    else
+        layers[insert].texture = render_target;
+    
+    // insert new layer at the right location in the layer_draw_stack
+    Layer **temp = malloc((layer_count + 1) * sizeof(Layer *));
+
+    for(int offset = 0; offset <= layer_count; offset++)
+        if (offset == layer_count || layer_draw_stack[offset]->layer > layer)
+            {
+                memcpy(temp, layer_draw_stack, (offset - 1) * sizeof(Layer *));
+                temp[offset] = &layers[layer_count];
+                memcpy(temp[offset + 1], layer_draw_stack[offset], (layer_count - offset) * sizeof(Layer *));
+
+                free(layer_draw_stack);
+                layer_draw_stack = temp;
+                layer_draw_stack++;
+                
+                break;
+            }
+    
+    // TODO: test this because I have idea if this even works
+
+    return layer_count++;
+}
+
+bool destroy_layer(int id)
+{
+    if (id == 0)
+        // LOG: removing layer 0 is illegal
+        return false;
+
+    for(int i = 0; i < layer_count; i++)
+    {
+        if (layer_draw_stack[i] == id)
+        {
+            Layer **temp = malloc((layer_count - 1) * sizeof(Layer *));
+
+            memcpy(temp, layer_draw_stack, (i) * sizeof(Layer *));
+            memcpy(temp[i], layer_draw_stack[i+1], (layer_count - i - 2) * sizeof(Layer *));
+
+            free(layer_draw_stack);
+            layer_draw_stack = temp;
+            layer_draw_stack_count--;
+
+            layers[id].layer = 0;
+            layers[id].texture = NULL;
+
+            // TODO: deallocate if removed at the end
+
+            return true;
+        }
+    }
+
+    // TODO: test this because I have idea if this even works
+    // LOG: layer was not found
+    return false;
+}
+
+void set_layer(int id)
+{
+    if (id >= 0 && id < layer_count)
+        layer_target = &layers[id];
+}
+#pragma endregion
+
+
 
 
 
@@ -181,7 +288,6 @@ int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
             scenes[i].onUpdate  == NULL &&
             scenes[i].onDestroy == NULL)
         {
-            scenes[scene_c].layer          = 0;
             scenes[scene_c].is_active      = true;
             scenes[scene_c].onCreate       = onCreate;
             scenes[scene_c].onUpdate       = onUpdate;
@@ -198,7 +304,6 @@ int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
     free(scenes);
     scenes = temp;
 
-    scenes[scene_c].layer          = 0;
     scenes[scene_c].is_active      = true;
     scenes[scene_c].onCreate       = onCreate;
     scenes[scene_c].onUpdate       = onUpdate;
@@ -213,7 +318,6 @@ void destroy_scene(int id)
 {
     scenes[id].onDestroy();
 
-    scenes[id].layer                = 0;
     scenes[id].is_active            = false;
     scenes[id].onCreate             = NULL;
     scenes[id].onUpdate             = NULL;
@@ -222,58 +326,49 @@ void destroy_scene(int id)
     // TODO: deallocate
 }
 
-void create_layers(int count)
-{
-    Texture **temp = malloc((layer_c + count) * sizeof(Texture *));
-    memcpy(temp, layers, layer_c * sizeof(Texture *));
+// void create_layers(int count)
+// {
+//     Texture **temp = malloc((layer_c + count) * sizeof(Texture *));
+//     memcpy(temp, layers, layer_c * sizeof(Texture *));
 
-    free(layers);
+//     free(layers);
 
-    layers = temp;
+//     layers = temp;
 
-    for (int i = 0; i < count; i++)
-        layers[layer_c + i] = create_texture(world_width, world_height, false, false);
+//     for (int i = 0; i < count; i++)
+//         layers[layer_c + i] = create_texture(world_width, world_height, false, false);
 
-    layer_c += count;
-}
+//     layer_c += count;
+// }
 
-void destroy_layers(int count)
-{
-    if (count >= layer_c)
-        count = layer_c - 1;
+// void destroy_layers(int count)
+// {
+//     if (count >= layer_c)
+//         count = layer_c - 1;
 
-    Texture **temp = malloc((layer_c - count) * sizeof(Texture *));
-    memcpy(temp, layers, (layer_c - count) * sizeof(Texture *));
+//     Texture **temp = malloc((layer_c - count) * sizeof(Texture *));
+//     memcpy(temp, layers, (layer_c - count) * sizeof(Texture *));
 
-    free(layers);
+//     free(layers);
 
-    layers = temp;
-    layer_c -= count;
-}
+//     layers = temp;
+//     layer_c -= count;
+// }
 
 void set_scene_active(int scene, bool active)
 {
-    if (scene < layer_c)
+    if (scene >= 0 && scene < scene_c)
         scenes[scene].is_active = active;
 }
 
-bool set_scene_layer(int scene, int layer)
-{
-    if (layer >= layer_c || layer < 0)
-        return false;
+// bool set_layer(int layer)
+// {
+//     if (layer >= layer_c || layer < 0)
+//         return false;
 
-    scenes[scene].layer = layer;
-    return true;
-}
-
-bool set_layer(int layer)
-{
-    if (layer >= layer_c || layer < 0)
-        return false;
-
-    target_layer = layer;
-    return true;
-}
+//     target_layer = layer;
+//     return true;
+// }
 
 void set_color(Color color) 
 {
@@ -292,7 +387,7 @@ void set_title(const char *title)
 
 void draw_pixel(int x, int y)
 {
-    draw_pixel_to_texture(layers[target_layer], x, y, target_color);
+    draw_pixel_to_texture(layer_target->texture, x, y, target_color);
 }
 
 // void draw_line(int x1, int y1, int x2, int y2)
@@ -302,5 +397,6 @@ void draw_pixel(int x, int y)
 
 void clear_layer()
 {
-    memcpy(layers[target_layer]->data, target_clear_color->data, target_clear_color->width * target_clear_color->height * sizeof(Color));
+    clear_texture(layer_target->texture, COLOR_BLACK);
+    // memcpy(layers[target_layer]->data, target_clear_color->data, target_clear_color->width * target_clear_color->height * sizeof(Color));
 }

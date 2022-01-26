@@ -19,7 +19,7 @@ void destroy_layers(int count);
 
 void set_scene_active(int scene, bool active);
 bool set_scene_layer(int scene, int layer);
-bool set_layer(int layer);
+void set_layer(int id);
 void set_color(Color color);
 void set_clear_color(Color color);
 void set_title(const char *title);

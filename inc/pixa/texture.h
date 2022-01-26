@@ -1,6 +1,8 @@
 #ifndef PIXA_TEXTURE_H
 #define PIXA_TEXTURE_H
 
+#include <stdbool.h>
+
 #include "Pixa/color.h"
 
 typedef struct
