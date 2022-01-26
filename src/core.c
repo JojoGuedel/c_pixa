@@ -1,16 +1,19 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include "pixa/pixa.h"
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+#include "Pixa/core.h"
+#include "Pixa/scene.h"
+#include "Pixa/texture.h"
+
 
 static bool active;
 
-static int screen_width;
-static int screen_height;
+static int window_width;
+static int window_height;
 
 static int world_width;
 static int world_height;
@@ -24,10 +27,10 @@ static Scene *scenes;
 static size_t scene_c;
 
 static Color target_color;
-static Texture target_clear_color;
+static Texture *target_clear_color;
 
 static int target_layer;
-static Texture *layers;
+static Texture **layers;
 static size_t layer_c;
 
 static double elapsed_time;
@@ -37,105 +40,6 @@ static double delta_time;
 
 static GLFWwindow* window;
 
-Texture create_texture(int width, int height, bool filtered, bool clamp)
-{
-    Texture texture;
-
-    texture.width = width;
-    texture.height = height;
-
-    texture.scale_x = 1.0f / res_x;
-    texture.scale_y = 1.0f / res_y;
-
-    texture.data = malloc(width * height * sizeof(Color));
-
-    glGenTextures(1, &texture.id);
-    glBindTexture(GL_TEXTURE_2D, texture.id);
-
-    if (filtered)
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
-    else
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-    }
-
-    if (clamp)
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
-    }
-    else
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    }
-
-    // I don't know what this does yet so...
-    // glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_MODULATE);
-    return texture;
-}
-
-void update_texture(Texture texture)
-{
-    glBindTexture(GL_TEXTURE_2D, texture.id);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture.width, texture.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture.data);
-}
-
-void draw_texture(Texture texture, int x, int y)
-{
-    glBindTexture(GL_TEXTURE_2D, texture.id);
-    glBegin(GL_QUADS);
-    // glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0.0f * texture.scale_x + x, 0.0f * texture.scale_y + y);
-    glVertex3f(-1.0f, 1.0f, 0.0f);
-
-    glTexCoord2f(0.0f * texture.scale_x + x, 1.0f * texture.scale_y + y);
-    glVertex3f(-1.0f, -1.0f , 0.0f);
-
-    glTexCoord2f(1.0f * texture.scale_x + x, 1.0f * texture.scale_y + y);
-    glVertex3f(1.0f , -1.0f, 0.0f);
-
-    glTexCoord2f(1.0f * texture.scale_x + x, 0.0f * texture.scale_y + y);
-    glVertex3f(1.0f, 1.0f, 0.0f);
-    glEnd();
-}
-
-void draw_pixel_to_texture(Texture texture, int x, int y, Color color)
-{
-    if (x < 0 || y < 0 || x >= texture.width || y >= texture.height)
-        return;
-
-    texture.data[y * texture.width + x] = color;
-}
-
-// void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color)
-// {
-//     int dx = x2 - x1;
-//     int dy = y2 - y1;
-
-//     if (dy == 0)
-//     {
-//         if (dx > 0)
-//         {
-//             for(int x = x1; x < x2; x++)
-//                 draw_pixel_to_texture(texture, x, y1, color);
-//         }
-//     }
-
-//     if (dx == 0)
-//     {
-//     }
-// }
-
-void clear_texture(Texture texture, Color color)
-{
-    for(int i = 0; i < texture.width * texture.height; i++)
-        texture.data[i] = color;
-}
 
 void glfw_error_callback(int error, const char *desc)
 {
@@ -147,7 +51,7 @@ void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsi
     printf("[DEBUG] gl: %s\n", msg);
 }
 
-void create_engine(int s_w, int s_h, int r_x, int r_y)
+void create_engine(int w_w, int w_h, int r_x, int r_y)
 {
     // TODO: Error checking
     // TODO: Logging
@@ -160,7 +64,7 @@ void create_engine(int s_w, int s_h, int r_x, int r_y)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     
-    window = glfwCreateWindow(s_w, s_h, "pixa", NULL, NULL);
+    window = glfwCreateWindow(w_w, w_h, "Pixa", NULL, NULL);
     glfwMakeContextCurrent(window);
 
     // init glew
@@ -175,11 +79,11 @@ void create_engine(int s_w, int s_h, int r_x, int r_y)
     // init all globals
     active = true;
 
-    screen_width = s_w;
-    screen_height = s_h;
+    window_width = w_w;
+    window_height = w_h;
 
-    world_width = s_w / r_x; 
-    world_height = s_h / r_y;
+    world_width = w_w / r_x; 
+    world_height = w_h / r_y;
 
     res_x = r_x;
     res_y = r_y;
@@ -199,7 +103,7 @@ void create_engine(int s_w, int s_h, int r_x, int r_y)
     elapsed_time = glfwGetTime();
 
     // TODO: move this to resize event
-    glViewport(0, 0, screen_width, screen_height);
+    glViewport(0, 0, window_width, window_height);
     // I don't know what this does yet so...
     // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
@@ -211,15 +115,10 @@ void destroy_engine()
     free(scenes);
 
     for(int i = 0; i < layer_c; i++)
-        free(layers[i].data);
+        free(layers[i]->data);
     free(layers);
 
     glfwTerminate();
-}
-
-void exit_engine()
-{
-    active = false;
 }
 
 void start_engine()
@@ -267,6 +166,13 @@ void start_engine()
     glfwTerminate();
 }
 
+void stop_engine()
+{
+    active = false;
+}
+
+
+
 int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
 {
     for (int i = 0; i < scene_c; i++)
@@ -275,11 +181,13 @@ int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
             scenes[i].onUpdate  == NULL &&
             scenes[i].onDestroy == NULL)
         {
-            scenes[i].layer         = 0;
-            scenes[i].is_active     = true;
-            scenes[i].onCreate      = onCreate;
-            scenes[i].onUpdate      = onUpdate;
-            scenes[i].onDestroy     = onDestroy;
+            scenes[scene_c].layer          = 0;
+            scenes[scene_c].is_active      = true;
+            scenes[scene_c].onCreate       = onCreate;
+            scenes[scene_c].onUpdate       = onUpdate;
+            scenes[scene_c].onDestroy      = onDestroy;
+
+            scenes[scene_c].onCreate();
 
             return i;
         }
@@ -316,8 +224,8 @@ void destroy_scene(int id)
 
 void create_layers(int count)
 {
-    Texture *temp = malloc((layer_c + count) * sizeof(Texture));
-    memcpy(temp, layers, layer_c * sizeof(Texture));
+    Texture **temp = malloc((layer_c + count) * sizeof(Texture *));
+    memcpy(temp, layers, layer_c * sizeof(Texture *));
 
     free(layers);
 
@@ -334,8 +242,8 @@ void destroy_layers(int count)
     if (count >= layer_c)
         count = layer_c - 1;
 
-    Texture *temp = malloc((layer_c - count) * sizeof(Texture));
-    memcpy(temp, layers, (layer_c - count) * sizeof(Texture));
+    Texture **temp = malloc((layer_c - count) * sizeof(Texture *));
+    memcpy(temp, layers, (layer_c - count) * sizeof(Texture *));
 
     free(layers);
 
@@ -382,41 +290,6 @@ void set_title(const char *title)
     glfwSetWindowTitle(window, title);
 }
 
-int get_width()
-{
-    return world_width;
-}
-
-int get_height()
-{
-    return world_height;
-}
-
-int get_screen_width()
-{
-    return screen_width;
-}
-
-int get_screen_height()
-{
-    return screen_height;
-}
-
-double get_elapsed_time()
-{
-    return elapsed_time;
-}
-
-double get_delta_time()
-{
-    return delta_time;
-}
-
-float get_fps()
-{
-    return 1.0f / delta_time;
-}
-
 void draw_pixel(int x, int y)
 {
     draw_pixel_to_texture(layers[target_layer], x, y, target_color);
@@ -429,5 +302,5 @@ void draw_pixel(int x, int y)
 
 void clear_layer()
 {
-    memcpy(layers[target_layer].data, target_clear_color.data, target_clear_color.width * target_clear_color.height * sizeof(Color));
+    memcpy(layers[target_layer]->data, target_clear_color->data, target_clear_color->width * target_clear_color->height * sizeof(Color));
 }

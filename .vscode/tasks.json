@@ -8,7 +8,8 @@
             "command": "clang",
             "args": [
                 "${workspaceFolder}/src/main.c",
-                "${workspaceFolder}/src/pixa.c",
+                "${workspaceFolder}/src/core.c",
+                "${workspaceFolder}/src/texture.c",
 
                 "-L${workspaceFolder}/lib",
                 "-lglfw3_mt",
