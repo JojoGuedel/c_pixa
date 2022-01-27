@@ -51,8 +51,6 @@ size_t layer_draw_stack_count;
 static GLFWwindow* window;
 
 
-
-
 void glfw_error_callback(int error, const char *desc)
 {
     printf("[ERROR] glfw: %i %s\n", error, desc);
@@ -110,7 +108,7 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     target_color = COLOR_WHITE;
 
     target_clear_color = create_texture(world_width, world_height, false, false);
-    set_clear_color(COLOR_BLACK);
+    // set_clear_color(COLOR_BLACK);
 
     // init layer 0
     Texture *draw_target = create_texture(w_w / r_x, w_h / r_y, false, false);
@@ -126,7 +124,7 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     layer_draw_stack = malloc(sizeof(int));
     layer_draw_stack[0] = LAYER_DEFAULT;
 
-    set_layer(0);
+    bind_layer(0);
 
     // TODO: move this to resize event
     glViewport(0, 0, window_width, window_height);
@@ -224,6 +222,9 @@ int create_layer(int layer, Texture *render_target)
         layers[insert].texture = create_texture(world_width, world_height, false, false);
     else
         layers[insert].texture = render_target;
+
+    layers[insert].clear_texture = copy_texture(layers[insert].texture);
+    clear_texture(layers[insert].clear_texture, COLOR_BLACK);
     
     // insert new layer at the right location in the layer_draw_stack
     int *temp = malloc((layer_draw_stack_count + 1) * sizeof(int));
@@ -281,13 +282,25 @@ bool destroy_layer(int id)
     return false;
 }
 
-void set_layer(int id)
+void clear_color(Color color)
+{
+    clear_texture(layers[layer_target].clear_texture, color);   
+}
+
+void clear(int id)
+{
+    memcpy(layers[layer_target].texture->data,
+           layers[layer_target].clear_texture->data,
+           layers[layer_target].clear_texture->width * layers[layer_target].clear_texture->height * sizeof(Color));
+}
+
+#pragma endregion
+
+void bind_layer(int id)
 {
     if (id >= 0 && id < layer_count)
         layer_target = id;
 }
-#pragma endregion
-
 
 
 
@@ -382,33 +395,33 @@ void set_scene_active(int scene, bool active)
 //     return true;
 // }
 
-void set_color(Color color) 
-{
-    target_color = color;
-}
+// void set_color(Color color) 
+// {
+//     target_color = color;
+// }
 
-void set_clear_color(Color color) 
-{
-    clear_texture(target_clear_color, color);
-}
+// void set_clear_color(Color color) 
+// {
+//     clear_texture(target_clear_color, color);
+// }
 
-void set_title(const char *title)
-{
-    glfwSetWindowTitle(window, title);
-}
+// void set_title(const char *title)
+// {
+//     glfwSetWindowTitle(window, title);
+// }
 
-void draw_pixel(int x, int y)
-{
-    draw_pixel_to_texture(layers[layer_target].texture, x, y, target_color);
-}
+// void draw_pixel(int x, int y)
+// {
+//     draw_pixel_to_texture(layers[layer_target].texture, x, y, target_color);
+// }
 
 // void draw_line(int x1, int y1, int x2, int y2)
 // {
 //     draw_line_to_texture(layers[target_layer], x1, y1, x2, y2, target_color);
 // }
 
-void clear_layer()
-{
-    clear_texture(layers[layer_target].texture, COLOR_BLACK);
-    // memcpy(layers[target_layer]->data, target_clear_color->data, target_clear_color->width * target_clear_color->height * sizeof(Color));
-}
+// void clear_layer()
+// {
+//     clear_texture(layers[layer_target].texture, COLOR_BLACK);
+//     // memcpy(layers[target_layer]->data, target_clear_color->data, target_clear_color->width * target_clear_color->height * sizeof(Color));
+// }
