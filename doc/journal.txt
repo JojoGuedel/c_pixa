@@ -44,3 +44,8 @@ Die Layers waren sehr verbuggt.
 Es gab einen Bug mit dem layer_draw_stack, da die Pointer immer noch zur alten Stelle gezeigt haben,
 die Layers aber schon an eine neue Stelle kopiert worden waren, da ein neuer layer kreiert wurde.
 Dieser Bug gab lustige access violation exceptions.
+
+Des weiteren habe ich gemacht, dass die Layers eine clear_texture haben.
+Wenn man clear() aufruft, werden die Daten von der clear_texture zu der richtigen Texture kopiert.
+Das sollte performanter sein, als jedes Mal die Texture von hand zu clearen, da "memcpy" sehr schnell ist.
+Jedoch muss ich, wenn man irgenwann die Texturen resizen kann, die clear_texture neu setzten.
