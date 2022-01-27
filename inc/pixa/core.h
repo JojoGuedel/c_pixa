@@ -14,8 +14,8 @@ void stop_engine();
 int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)());
 void destroy_scene(int id);
 
-void create_layers(int count);
-void destroy_layers(int count);
+// void create_layers(int count);
+// void destroy_layers(int count);
 
 void set_scene_active(int scene, bool active);
 bool set_scene_layer(int scene, int layer);

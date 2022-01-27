@@ -11,7 +11,7 @@ typedef struct
     Texture * texture;
 } Layer;
 
-int create_layer();
+int create_layer(int layer, Texture *render_target);
 bool destroy_layer(int id);
 
 void set_layer(int id);

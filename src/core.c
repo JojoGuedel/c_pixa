@@ -12,6 +12,7 @@
 
 static bool active;
 
+// TODO: remove window_width and window_height so that only widht and hight exists
 static int window_width;
 static int window_height;
 
@@ -38,10 +39,12 @@ static Texture *target_clear_color;
 
 Layer *layers;
 size_t layer_count;
+// TODO: make a layer_clear_color array
 
-Layer *layer_target;
-Layer **layer_draw_stack;
+int layer_target;
+int *layer_draw_stack;
 size_t layer_draw_stack_count;
+
 
 // TODO: implement textures for gpu (olc::Decal)
 
@@ -120,9 +123,9 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     layers[0].texture = draw_target;
 
     layer_draw_stack_count = 1;
-    layer_draw_stack = malloc(sizeof(Layer *));
-    layer_draw_stack[0] = layers;
-    
+    layer_draw_stack = malloc(sizeof(int));
+    layer_draw_stack[0] = LAYER_DEFAULT;
+
     set_layer(0);
 
     // TODO: move this to resize event
@@ -167,10 +170,10 @@ void start_engine()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for(int i = 0; i < layer_count; i++)
+        for(int i = 0; i < layer_draw_stack_count; i++)
         {
-            update_texture(layer_draw_stack[i]->texture);
-            draw_texture(layer_draw_stack[i]->texture, 0, 0);
+            update_texture(layers[layer_draw_stack[i]].texture);
+            draw_texture(layers[layer_draw_stack[i]].texture, 0, 0);
         }
 
         glfwSwapBuffers(window);
@@ -208,6 +211,7 @@ int create_layer(int layer, Texture *render_target)
         Layer *temp = malloc((layer_count + 1) * sizeof(Layer));
         memcpy(temp, layers, layer_count * sizeof(Layer));
         free(layers);
+
         layers = temp;
 
         insert = layer_count;
@@ -222,18 +226,18 @@ int create_layer(int layer, Texture *render_target)
         layers[insert].texture = render_target;
     
     // insert new layer at the right location in the layer_draw_stack
-    Layer **temp = malloc((layer_count + 1) * sizeof(Layer *));
+    int *temp = malloc((layer_draw_stack_count + 1) * sizeof(int));
 
-    for(int offset = 0; offset <= layer_count; offset++)
-        if (offset == layer_count || layer_draw_stack[offset]->layer > layer)
+    for(int offset = 0; offset < layer_draw_stack_count + 1; offset++)
+        if (offset == layer_count || layers[layer_draw_stack[offset]].layer > layer)
             {
-                memcpy(temp, layer_draw_stack, (offset - 1) * sizeof(Layer *));
-                temp[offset] = &layers[layer_count];
-                memcpy(temp[offset + 1], layer_draw_stack[offset], (layer_count - offset) * sizeof(Layer *));
+                memcpy(temp, layer_draw_stack, offset * sizeof(int));
+                temp[offset] = insert;
+                memcpy(&temp[offset + 1], &layer_draw_stack[offset], (layer_draw_stack_count - offset) * sizeof(int));
 
                 free(layer_draw_stack);
                 layer_draw_stack = temp;
-                layer_draw_stack++;
+                layer_draw_stack_count++;
                 
                 break;
             }
@@ -251,12 +255,13 @@ bool destroy_layer(int id)
 
     for(int i = 0; i < layer_count; i++)
     {
-        if (layer_draw_stack[i] == layers + id)
+        if (layer_draw_stack[i] == id)
         {
-            Layer **temp = malloc((layer_count - 1) * sizeof(Layer *));
+            int *temp = malloc((layer_count - 1) * sizeof(int));
 
-            memcpy(temp, layer_draw_stack, (i) * sizeof(Layer *));
-            memcpy(temp[i], layer_draw_stack[i+1], (layer_count - i - 2) * sizeof(Layer *));
+            memcpy(temp, layer_draw_stack, i * sizeof(int));
+            // TODO: check if it needs to be 1 or 2
+            memcpy(&temp[i], &layer_draw_stack[i + 1], (layer_draw_stack_count - i - 1) * sizeof(int));
 
             free(layer_draw_stack);
             layer_draw_stack = temp;
@@ -279,7 +284,7 @@ bool destroy_layer(int id)
 void set_layer(int id)
 {
     if (id >= 0 && id < layer_count)
-        layer_target = &layers[id];
+        layer_target = id;
 }
 #pragma endregion
 
@@ -394,7 +399,7 @@ void set_title(const char *title)
 
 void draw_pixel(int x, int y)
 {
-    draw_pixel_to_texture(layer_target->texture, x, y, target_color);
+    draw_pixel_to_texture(layers[layer_target].texture, x, y, target_color);
 }
 
 // void draw_line(int x1, int y1, int x2, int y2)
@@ -404,6 +409,6 @@ void draw_pixel(int x, int y)
 
 void clear_layer()
 {
-    clear_texture(layer_target->texture, COLOR_BLACK);
+    clear_texture(layers[layer_target].texture, COLOR_BLACK);
     // memcpy(layers[target_layer]->data, target_clear_color->data, target_clear_color->width * target_clear_color->height * sizeof(Color));
 }
