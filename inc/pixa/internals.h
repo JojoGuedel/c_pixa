@@ -11,7 +11,7 @@
 extern Scene *scenes;
 extern size_t scene_c;
 
-extern Color target_color;
+extern Color color_target;
 
 extern Layer *layer_default;
 extern Layer *layer_target;

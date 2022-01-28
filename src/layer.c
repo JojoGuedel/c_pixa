@@ -18,12 +18,7 @@ Layer *create_layer(int layer_level, Texture *draw_target)
     Layer *layer = malloc(sizeof(Layer));
 
     if (draw_target == NULL)
-    {
-        draw_target = create_texture(width / resolution_x, height / resolution_y, false, false);
-
-        draw_target->scale_x = 1.0f / resolution_x;
-        draw_target->scale_y = 1.0f / resolution_y;
-    }
+        draw_target = create_texture(width, height, false, false);
     
     layer->layer_level = layer_level;
     layer->draw_target = draw_target;
@@ -31,7 +26,7 @@ Layer *create_layer(int layer_level, Texture *draw_target)
     layer->clear_color = malloc(layer->draw_target->width * layer->draw_target->height * sizeof(Color));
 
     for (int i = 0; i < layer->draw_target->width * layer->draw_target->height; i++)
-        layer->clear_color[i] = COLOR_BLANK;
+        layer->clear_color[i] = COLOR_BLACK;
 
     Layer **temp = malloc((layer_draw_stack_count + 1) * sizeof(Layer *));
 

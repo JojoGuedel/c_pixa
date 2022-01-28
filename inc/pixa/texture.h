@@ -28,8 +28,9 @@ void copy_texture_data(Texture *dst, Texture *src);
 void update_texture(Texture *texture);  
 
 void draw_texture(Texture *texture, int x, int y);
-void draw_pixel_to_texture(Texture *texture, int x, int y, Color color);
-
 void clear_texture(Texture *texture, Color color);
+
+void texture_draw_pixel(Texture *texture, int x, int y, Color color);
+void texture_draw_line(Texture *texture, int x1, int y1, int x2, int y2, Color color);
 
 #endif

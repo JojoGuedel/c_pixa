@@ -1,6 +1,10 @@
 #ifndef PIXA_GRAPHICS_H
 #define PIXA_GRAPHICS_H
 
+#include "Pixa/color.h"
+
+void color(Color color);
+
 void draw_pixel(int x, int y);
 void draw_line(int x1, int y1, int x2, int y2);
 

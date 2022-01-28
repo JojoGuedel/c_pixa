@@ -5,6 +5,10 @@
 #define LOG_WARNING     "WARNING"
 #define LOG_ERROR       "ERROR"
 
-void log_msg(char *msg_t, char *msg);
+#define LOG_USER        "User"
+#define LOG_GLFW        "GLFW"
+#define LOG_OPENGL      "OpenGL"
+
+void log_msg(char *msg_t, char *sender, char *msg_format, ...);
 
 #endif

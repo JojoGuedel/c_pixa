@@ -5,6 +5,7 @@
 
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
+
 #include "Pixa/core.h"
 #include "Pixa/globals.h"
 #include "Pixa/internals.h"
@@ -23,8 +24,6 @@ int resolution_y;
 double elapsed_time;
 double delta_time;
 
-Color target_color;
-
 GLFWwindow* window;
 
 void glfw_error_callback(int error, const char *desc)
@@ -37,8 +36,7 @@ void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsi
     printf("[DEBUG] gl: %s\n", msg);
 }
 
-#pragma region engine
-void create_engine(int w_w, int w_h, int r_x, int r_y)
+void create_engine(int w, int h, int res_x, int res_y)
 {
     // TODO: Error checking
     // TODO: Logging
@@ -51,7 +49,7 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE);
     glfwWindowHint(GLFW_DOUBLEBUFFER, GLFW_TRUE);
     
-    window = glfwCreateWindow(w_w, w_h, "Pixa", NULL, NULL);
+    window = glfwCreateWindow(w, h, "Pixa", NULL, NULL);
     glfwMakeContextCurrent(window);
 
     // init glew
@@ -66,31 +64,24 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     // init all globals
     active = true;
 
-    width = w_w / r_x;
-    height = w_h / r_y;
-
-    resolution_x = r_x;
-    resolution_y = r_y;
+    width = w / res_x;
+    height = h / res_y;
 
     delta_time = 0;
     elapsed_time = glfwGetTime();
 
     scene_c = 0;
 
-    target_color = COLOR_WHITE;
+    color_target = COLOR_WHITE;
 
     // init layer 0
-    Texture *draw_target = create_texture(width / resolution_x, height / resolution_y, false, false);
-    draw_target->scale_x = 1.0f / r_x;
-    draw_target->scale_y = 1.0f / r_y;
+    Texture *draw_target = create_texture(width, height, false, false);
 
     layer_draw_stack_count = 0;
     layer_target = layer_default = create_layer(0, draw_target);
 
-    // bind_layer(0);
-
     // TODO: move this to resize event
-    glViewport(0, 0, width * resolution_x, width * resolution_x);
+    glViewport(0, 0, width * res_x, height * res_y);
     // I don't know what this does yet so...
     // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
@@ -134,7 +125,6 @@ void start_engine()
 
         for(int i = 0; i < layer_draw_stack_count; i++)
         {
-
             update_texture(layer_draw_stack[i]->draw_target);
             draw_texture(layer_draw_stack[i]->draw_target, 0, 0);
         }
@@ -155,80 +145,3 @@ void stop_engine()
 {
     active = false;
 }
-#pragma endregion
-
-
-// void create_layers(int count)
-// {
-//     Texture **temp = malloc((layer_c + count) * sizeof(Texture *));
-//     memcpy(temp, layers, layer_c * sizeof(Texture *));
-
-//     free(layers);
-
-//     layers = temp;
-
-//     for (int i = 0; i < count; i++)
-//         layers[layer_c + i] = create_texture(world_width, world_height, false, false);
-
-//     layer_c += count;
-// }
-
-// void destroy_layers(int count)
-// {
-//     if (count >= layer_c)
-//         count = layer_c - 1;
-
-//     Texture **temp = malloc((layer_c - count) * sizeof(Texture *));
-//     memcpy(temp, layers, (layer_c - count) * sizeof(Texture *));
-
-//     free(layers);
-
-//     layers = temp;
-//     layer_c -= count;
-// }
-
-void set_scene_active(int scene, bool active)
-{
-    if (scene >= 0 && scene < scene_c)
-        scenes[scene].is_active = active;
-}
-
-// bool set_layer(int layer)
-// {
-//     if (layer >= layer_c || layer < 0)
-//         return false;
-
-//     target_layer = layer;
-//     return true;
-// }
-
-// void set_color(Color color) 
-// {
-//     target_color = color;
-// }
-
-// void set_clear_color(Color color) 
-// {
-//     clear_texture(target_clear_color, color);
-// }
-
-// void set_title(const char *title)
-// {
-//     glfwSetWindowTitle(window, title);
-// }
-
-// void draw_pixel(int x, int y)
-// {
-//     draw_pixel_to_texture(layers[layer_target].texture, x, y, target_color);
-// }
-
-// void draw_line(int x1, int y1, int x2, int y2)
-// {
-//     draw_line_to_texture(layers[target_layer], x1, y1, x2, y2, target_color);
-// }
-
-// void clear_layer()
-// {
-//     clear_texture(layers[layer_target].texture, COLOR_BLACK);
-//     // memcpy(layers[target_layer]->data, target_clear_color->data, target_clear_color->width * target_clear_color->height * sizeof(Color));
-// }

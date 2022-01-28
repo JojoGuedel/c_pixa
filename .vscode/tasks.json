@@ -9,6 +9,7 @@
             "args": [
                 "${workspaceFolder}/src/main.c",
                 "${workspaceFolder}/src/core.c",
+                "${workspaceFolder}/src/graphics.c",
                 "${workspaceFolder}/src/layer.c",
                 "${workspaceFolder}/src/log.c",
                 "${workspaceFolder}/src/scene.c",

@@ -4,6 +4,7 @@
 
 #include "GLFW/glfw3.h"
 #include "Pixa/color.h"
+#include "Pixa/globals.h"
 #include "Pixa/texture.h"
 
 Texture *create_texture(int width, int height, bool filtered, bool clamp)
@@ -82,27 +83,28 @@ void update_texture(Texture *texture)
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture->width, texture->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, texture->data);
 }
 
-// TODO: maybe rename texture to sprite and store x and y in the sprite
 void draw_texture(Texture *texture, int x, int y)
 {
     glBindTexture(GL_TEXTURE_2D, texture->id);
     glBegin(GL_QUADS);
-    // glColor4ub(255, 255, 255, 255);
-    glTexCoord2f(0.0f * texture->scale_x + x, 0.0f * texture->scale_y + y);
+
+    glColor4ub(texture->tint.r, texture->tint.g, texture->tint.b, texture->tint.a);
+
+    glTexCoord2f(x, y);
     glVertex3f(-1.0f, 1.0f, 0.0f);
 
-    glTexCoord2f(0.0f * texture->scale_x + x, 1.0f * texture->scale_y + y);
-    glVertex3f(-1.0f, -1.0f , 0.0f);
+    glTexCoord2f(x, y + texture->scale_y);
+    glVertex3f(-1.0f, -1.0f, 0.0f);
 
-    glTexCoord2f(1.0f * texture->scale_x + x, 1.0f * texture->scale_y + y);
+    glTexCoord2f(x + texture->scale_x, y + texture->scale_y);
     glVertex3f(1.0f , -1.0f, 0.0f);
 
-    glTexCoord2f(1.0f * texture->scale_x + x, 0.0f * texture->scale_y + y);
+    glTexCoord2f(x + texture->scale_x, y);
     glVertex3f(1.0f, 1.0f, 0.0f);
     glEnd();
 }
 
-void draw_pixel_to_texture(Texture *texture, int x, int y, Color color)
+void texture_draw_pixel(Texture *texture, int x, int y, Color color)
 {
     if (x < 0 || y < 0 || x >= texture->width || y >= texture->height)
         return;
@@ -110,24 +112,29 @@ void draw_pixel_to_texture(Texture *texture, int x, int y, Color color)
     texture->data[y * texture->width + x] = color;
 }
 
-// void draw_line_to_texture(Texture texture, int x1, int y1, int x2, int y2, Color color)
-// {
-//     int dx = x2 - x1;
-//     int dy = y2 - y1;
+void texture_draw_line(Texture *texture, int x1, int y1, int x2, int y2, Color color)
+{
+    int dx = x2 - x1;
+    int dy = y2 - y1;
 
-//     if (dy == 0)
-//     {
-//         if (dx > 0)
-//         {
-//             for(int x = x1; x < x2; x++)
-//                 draw_pixel_to_texture(texture, x, y1, color);
-//         }
-//     }
+    if (abs(dx) > abs(dy))
+    {
+        for (int x = x1; x < x2; x++)
+        {
+            int y = y1 + dy * (x - x1) / dx;
+            texture_draw_pixel(texture, x, y, color);
+        }
+    }
+    else
+    {
+        for (int y = y1; y < y2; y++)
+        {
+            int x = x1 + dx * (y - y1) / dy;
+            texture_draw_pixel(texture, x, y, color);
+        }
+    }
 
-//     if (dx == 0)
-//     {
-//     }
-// }
+}
 
 void clear_texture(Texture *texture, Color color)
 {
