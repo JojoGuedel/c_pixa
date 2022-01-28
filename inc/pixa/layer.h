@@ -8,16 +8,16 @@
 
 typedef struct
 {
-    int layer;
+    int layer_level;
 
-    Texture *clear_texture;
-    Texture *texture;
+    Color *clear_color;
+    Texture *draw_target;
 } Layer;
 
-int create_layer(int layer, Texture *render_target);
-bool destroy_layer(int id);
+Layer *create_layer(int layer_level, Texture *draw_target);
+bool destroy_layer(Layer *layer);
 
-void bind_layer(int id);
+void bind_layer(Layer *layer);
 void clear_color(Color color);
 void clear();
 

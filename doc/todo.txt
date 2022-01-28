@@ -1,0 +1,4 @@
+// TODO: implement textures for gpu (olc::Decal)
+
+layer:
+- implement ussage of bool visible so that visibility can be set of each leayer

@@ -6,50 +6,26 @@
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 #include "Pixa/core.h"
+#include "Pixa/globals.h"
+#include "Pixa/internals.h"
 #include "Pixa/layer.h"
 #include "Pixa/scene.h"
 #include "Pixa/texture.h"
 
-static bool active;
+bool active;
 
-// TODO: remove window_width and window_height so that only widht and hight exists
-static int window_width;
-static int window_height;
+int width;
+int height;
 
-static int world_width;
-static int world_height;
+int resolution_x;
+int resolution_y;
 
-static int res_x;
-static int res_y;
+double elapsed_time;
+double delta_time;
 
-// TODO: make resolution scaleable
-static double elapsed_time;
-static double delta_time;
+Color target_color;
 
-
-static Scene *scenes;
-static size_t scene_c;
-
-static Color target_color;
-static Texture *target_clear_color;
-
-// static int target_layer;
-// static Texture **layers;
-// static size_t layer_c;
-
-Layer *layers;
-size_t layer_count;
-// TODO: make a layer_clear_color array
-
-int layer_target;
-int *layer_draw_stack;
-size_t layer_draw_stack_count;
-
-
-// TODO: implement textures for gpu (olc::Decal)
-
-static GLFWwindow* window;
-
+GLFWwindow* window;
 
 void glfw_error_callback(int error, const char *desc)
 {
@@ -62,7 +38,6 @@ void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsi
 }
 
 #pragma region engine
-// TODO: refactor and integrate with params.h
 void create_engine(int w_w, int w_h, int r_x, int r_y)
 {
     // TODO: Error checking
@@ -91,14 +66,11 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
     // init all globals
     active = true;
 
-    window_width = w_w;
-    window_height = w_h;
+    width = w_w / r_x;
+    height = w_h / r_y;
 
-    world_width = w_w / r_x; 
-    world_height = w_h / r_y;
-
-    res_x = r_x;
-    res_y = r_y;
+    resolution_x = r_x;
+    resolution_y = r_y;
 
     delta_time = 0;
     elapsed_time = glfwGetTime();
@@ -107,27 +79,18 @@ void create_engine(int w_w, int w_h, int r_x, int r_y)
 
     target_color = COLOR_WHITE;
 
-    target_clear_color = create_texture(world_width, world_height, false, false);
-    // set_clear_color(COLOR_BLACK);
-
     // init layer 0
-    Texture *draw_target = create_texture(w_w / r_x, w_h / r_y, false, false);
+    Texture *draw_target = create_texture(width / resolution_x, height / resolution_y, false, false);
     draw_target->scale_x = 1.0f / r_x;
     draw_target->scale_y = 1.0f / r_y;
 
-    layer_count = 1;
-    layers = malloc(sizeof(Layer));
-    layers[0].layer = 0;
-    layers[0].texture = draw_target;
+    layer_draw_stack_count = 0;
+    layer_target = layer_default = create_layer(0, draw_target);
 
-    layer_draw_stack_count = 1;
-    layer_draw_stack = malloc(sizeof(int));
-    layer_draw_stack[0] = LAYER_DEFAULT;
-
-    bind_layer(0);
+    // bind_layer(0);
 
     // TODO: move this to resize event
-    glViewport(0, 0, window_width, window_height);
+    glViewport(0, 0, width * resolution_x, width * resolution_x);
     // I don't know what this does yet so...
     // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
@@ -138,7 +101,8 @@ void destroy_engine()
         scenes[i].onDestroy();
     free(scenes);
 
-    free(layers);
+    for(int i = 0; i < layer_draw_stack_count; i++)
+        free(layer_draw_stack[i]);
     free(layer_draw_stack);
 
     glfwTerminate();
@@ -170,8 +134,9 @@ void start_engine()
 
         for(int i = 0; i < layer_draw_stack_count; i++)
         {
-            update_texture(layers[layer_draw_stack[i]].texture);
-            draw_texture(layers[layer_draw_stack[i]].texture, 0, 0);
+
+            update_texture(layer_draw_stack[i]->draw_target);
+            draw_texture(layer_draw_stack[i]->draw_target, 0, 0);
         }
 
         glfwSwapBuffers(window);
@@ -192,164 +157,6 @@ void stop_engine()
 }
 #pragma endregion
 
-#pragma region layers
-int create_layer(int layer, Texture *render_target)
-{
-    int insert = -1;
-
-    for (int i = 0; i < scene_c; i++)
-        if (layers[i].texture == NULL)
-        {
-            insert =  i;
-            break;
-        }
-
-    if (insert == -1)
-    {
-        Layer *temp = malloc((layer_count + 1) * sizeof(Layer));
-        memcpy(temp, layers, layer_count * sizeof(Layer));
-        free(layers);
-
-        layers = temp;
-
-        insert = layer_count;
-    }
-
-    // create the new layer
-    layers[insert].layer = layer;
-
-    if (render_target == NULL)
-        layers[insert].texture = create_texture(world_width, world_height, false, false);
-    else
-        layers[insert].texture = render_target;
-
-    layers[insert].clear_texture = copy_texture(layers[insert].texture);
-    clear_texture(layers[insert].clear_texture, COLOR_BLACK);
-    
-    // insert new layer at the right location in the layer_draw_stack
-    int *temp = malloc((layer_draw_stack_count + 1) * sizeof(int));
-
-    for(int offset = 0; offset < layer_draw_stack_count + 1; offset++)
-        if (offset == layer_count || layers[layer_draw_stack[offset]].layer > layer)
-            {
-                memcpy(temp, layer_draw_stack, offset * sizeof(int));
-                temp[offset] = insert;
-                memcpy(&temp[offset + 1], &layer_draw_stack[offset], (layer_draw_stack_count - offset) * sizeof(int));
-
-                free(layer_draw_stack);
-                layer_draw_stack = temp;
-                layer_draw_stack_count++;
-                
-                break;
-            }
-    
-    // TODO: test this because I have idea if this even works
-
-    return layer_count++;
-}
-
-bool destroy_layer(int id)
-{
-    if (id == 0)
-        // LOG: removing layer 0 is illegal
-        return false;
-
-    for(int i = 0; i < layer_count; i++)
-    {
-        if (layer_draw_stack[i] == id)
-        {
-            int *temp = malloc((layer_count - 1) * sizeof(int));
-
-            memcpy(temp, layer_draw_stack, i * sizeof(int));
-            // TODO: check if it needs to be 1 or 2
-            memcpy(&temp[i], &layer_draw_stack[i + 1], (layer_draw_stack_count - i - 1) * sizeof(int));
-
-            free(layer_draw_stack);
-            layer_draw_stack = temp;
-            layer_draw_stack_count--;
-
-            layers[id].layer = 0;
-            layers[id].texture = NULL;
-
-            // TODO: deallocate if removed at the end
-
-            return true;
-        }
-    }
-
-    // TODO: test this because I have idea if this even works
-    // LOG: layer was not found
-    return false;
-}
-
-void clear_color(Color color)
-{
-    clear_texture(layers[layer_target].clear_texture, color);   
-}
-
-void clear(int id)
-{
-    memcpy(layers[layer_target].texture->data,
-           layers[layer_target].clear_texture->data,
-           layers[layer_target].clear_texture->width * layers[layer_target].clear_texture->height * sizeof(Color));
-}
-
-#pragma endregion
-
-void bind_layer(int id)
-{
-    if (id >= 0 && id < layer_count)
-        layer_target = id;
-}
-
-
-
-
-int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
-{
-    for (int i = 0; i < scene_c; i++)
-    {
-        if (scenes[i].onCreate  == NULL &&
-            scenes[i].onUpdate  == NULL &&
-            scenes[i].onDestroy == NULL)
-        {
-            scenes[scene_c].is_active      = true;
-            scenes[scene_c].onCreate       = onCreate;
-            scenes[scene_c].onUpdate       = onUpdate;
-            scenes[scene_c].onDestroy      = onDestroy;
-
-            scenes[scene_c].onCreate();
-
-            return i;
-        }
-    }
-
-    Scene *temp = malloc((scene_c + 1) * sizeof(Scene));
-    memcpy(temp, scenes, scene_c * sizeof(Scene));
-    free(scenes);
-    scenes = temp;
-
-    scenes[scene_c].is_active      = true;
-    scenes[scene_c].onCreate       = onCreate;
-    scenes[scene_c].onUpdate       = onUpdate;
-    scenes[scene_c].onDestroy      = onDestroy;
-
-    scenes[scene_c].onCreate();
-
-    return scene_c++;
-}
-
-void destroy_scene(int id)
-{
-    scenes[id].onDestroy();
-
-    scenes[id].is_active            = false;
-    scenes[id].onCreate             = NULL;
-    scenes[id].onUpdate             = NULL;
-    scenes[id].onDestroy            = NULL;
-
-    // TODO: deallocate
-}
 
 // void create_layers(int count)
 // {

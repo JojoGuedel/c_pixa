@@ -27,9 +27,6 @@ int main(int argc, const char *args[])
     create_engine(1000, 1000, 1, 1);
     create_scene(main_onCreate, main_onUpdate, main_onDestroy);
 
-    int l1 = create_layer(100, NULL);
-    bind_layer(l1);
-
     clear_color(COLOR_VERY_DARK_GREY);
 
     start_engine();
