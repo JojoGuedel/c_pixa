@@ -64,8 +64,8 @@ void create_engine(int w, int h, int res_x, int res_y)
     // init all globals
     active = true;
 
-    width = w / res_x;
-    height = h / res_y;
+    width = w;
+    height = h;
 
     delta_time = 0;
     elapsed_time = glfwGetTime();
@@ -75,13 +75,13 @@ void create_engine(int w, int h, int res_x, int res_y)
     color_target = COLOR_WHITE;
 
     // init layer 0
-    Texture *draw_target = create_texture(width, height, false, false);
+    Texture *draw_target = create_texture(width / res_x, height / res_y, false, false);
 
     layer_draw_stack_count = 0;
     layer_target = layer_default = create_layer(0, draw_target);
 
     // TODO: move this to resize event
-    glViewport(0, 0, width * res_x, height * res_y);
+    glViewport(0, 0, width, height);
     // I don't know what this does yet so...
     // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }

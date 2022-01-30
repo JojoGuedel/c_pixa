@@ -14,12 +14,7 @@ void main_onCreate()
 void main_onUpdate()
 {
     clear();
-
-    color(COLOR_WHITE);
-    draw_line(10, 10, 20, height - 1);
-
-    color(COLOR_RED);
-    draw_pixel(50, 50);
+    draw_line((int)elapsed_time % width, 0, (int)elapsed_time % width, height);
 
     printf("fps: %f\n", 1.0f / delta_time);
 }
@@ -31,7 +26,7 @@ void main_onDestroy()
 int main(int argc, const char *args[])
 {
     // create engine
-    create_engine(500, 500, 4, 4);
+    create_engine(500, 500, 2, 2);
     // create scenes
     create_scene(main_onCreate, main_onUpdate, main_onDestroy);
     // set clear color

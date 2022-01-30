@@ -32,11 +32,15 @@ int main()
 Die Scene rendert mit bis zu 3500 FPS.
 
 
+Programmier Zeit: 10h
+
 #+-------------------------------------------- 26.02.2022 --------------------------------------------+
 
 Heute habe ich eine neue Version von Layern implementiert.
 Layers werden jetzt mehr wie Textures verwendet.
 So ist die Engine für den Benutzer einheitlicher.
+
+Programmier Zeit: 3h
 
 #+-------------------------------------------- 27.02.2022 --------------------------------------------+
 
@@ -49,3 +53,26 @@ Des weiteren habe ich gemacht, dass die Layers eine clear_texture haben.
 Wenn man clear() aufruft, werden die Daten von der clear_texture zu der richtigen Texture kopiert.
 Das sollte performanter sein, als jedes Mal die Texture von hand zu clearen, da "memcpy" sehr schnell ist.
 Jedoch muss ich, wenn man irgenwann die Texturen resizen kann, die clear_texture neu setzten.
+
+Programmier Zeit: 2h
+
+#+-------------------------------------------- 28.02.2022 --------------------------------------------+
+
+Heute habe ich nochmal eine neue und bessere Implementierung von den Layers geschrieben.
+Die Layers können jetzt viel einfacher kreiert werden als vorher.
+Jetzt werden nicht mehr die IDs, sondern nur noch die Pointers zu den Layers gespeichert.
+
+Zudem kann die Engine jetzt Linien zeichnen.
+Ich bezweifle jedoch, das meine Implementation von den Linien sehr performant ist.
+Deshalb werde ich diese Funktion vermutlich in der Zukunft nochmals überarbeiten.
+
+Ich habe auch den Core weiter auseinander genommen.
+Jetzt ist es einfacher für den Nutzer, sich den Code durchzulesen,
+da alles jetzt schön sortiert ist und nicht mehr alles in einem File.
+Ich überlege mir aber noch, die Globals in core.h zu verschieben.
+
+Ich werde vermutlich schon bald mit einer ersten Version einer Fluidsimulation meine Engine aufs äusserste testen.
+Mein Ziel ist es, fortlaufend ein Interface zu programmieren, dass das Managen von Computeshadern einfach macht.
+Daraus erhoffe ich mir dann eine gute Performance.
+
+Programmier Zeit: 3h
