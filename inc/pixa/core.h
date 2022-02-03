@@ -3,9 +3,15 @@
 
 #include <stdbool.h>
 
-#include "Pixa/color.h"
+extern bool active;
 
-void create_engine();
+extern int width;
+extern int height;
+
+extern double elapsed_time;
+extern double delta_time;
+
+void create_engine(int width, int height, int res_x, int res_y);
 void destroy_engine();
 
 void start_engine();
@@ -14,14 +20,7 @@ void stop_engine();
 int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)());
 void destroy_scene(int id);
 
-// void set_scene_active(int scene, bool active);
-// bool set_scene_layer(int scene, int layer);
-// void set_layer(int id);
-// void set_color(Color color);
-// void set_clear_color(Color color);
-// void set_title(const char *title);
-
-// void draw_pixel(int x, int y);
-// void clear_layer();
+int get_width();
+int get_height();
 
 #endif

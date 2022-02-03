@@ -7,19 +7,15 @@
 #include "GLFW/glfw3.h"
 
 #include "Pixa/core.h"
-#include "Pixa/globals.h"
 #include "Pixa/internals.h"
 #include "Pixa/layer.h"
 #include "Pixa/scene.h"
-#include "Pixa/texture.h"
+#include "Pixa/sprite.h"
 
 bool active;
 
 int width;
 int height;
-
-int resolution_x;
-int resolution_y;
 
 double elapsed_time;
 double delta_time;
@@ -75,7 +71,8 @@ void create_engine(int w, int h, int res_x, int res_y)
     color_target = COLOR_WHITE;
 
     // init layer 0
-    Texture *draw_target = create_texture(width / res_x, height / res_y, false, false);
+    Sprite *draw_target = create_sprite(width / res_x, height / res_y, false, false);
+    set_sprite_scale(draw_target, 1.0f / (float) res_x, 1.0f / (float) res_y);
 
     layer_draw_stack_count = 0;
     layer_target = layer_default = create_layer(0, draw_target);
@@ -88,11 +85,11 @@ void create_engine(int w, int h, int res_x, int res_y)
 
 void destroy_engine()
 {
-    for(int i = 0; i < scene_c; i++)
+    for (int i = 0; i < scene_c; i++)
         scenes[i].onDestroy();
     free(scenes);
 
-    for(int i = 0; i < layer_draw_stack_count; i++)
+    for (int i = 0; i < layer_draw_stack_count; i++)
         free(layer_draw_stack[i]);
     free(layer_draw_stack);
 
@@ -111,7 +108,7 @@ void start_engine()
         glfwPollEvents();
         // TODO: handle events
 
-        for(int i = 0; i < scene_c; i++)
+        for (int i = 0; i < scene_c; i++)
         {
             if (!scenes[i].is_active)
                 continue;
@@ -123,10 +120,10 @@ void start_engine()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for(int i = 0; i < layer_draw_stack_count; i++)
+        for (int i = 0; i < layer_draw_stack_count; i++)
         {
-            update_texture(layer_draw_stack[i]->draw_target);
-            draw_texture(layer_draw_stack[i]->draw_target, 0, 0);
+            update_sprite(layer_draw_stack[i]->draw_target);
+            draw_sprite(layer_draw_stack[i]->draw_target);
         }
 
         glfwSwapBuffers(window);
@@ -144,4 +141,14 @@ void start_engine()
 void stop_engine()
 {
     active = false;
+}
+
+int get_width()
+{
+    return layer_target->draw_target->width;
+}
+
+int get_height()
+{
+    return layer_target->draw_target->height;
 }

@@ -1,14 +1,11 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-#include "Pixa/globals.h"
+#include "Pixa/core.h"
 #include "Pixa/log.h"
 
 void log_msg(const char *msg_type, const char *sender, const char *msg_format, ...)
 {
-    if (sender == NULL)
-        sender = LOG_USER;
-
     int s = (int) elapsed_time % 60;
     int m = (int) (elapsed_time / 60) % 60;
     int h = (int) (elapsed_time / 360);

@@ -13,7 +13,7 @@
                 "${workspaceFolder}/src/layer.c",
                 "${workspaceFolder}/src/log.c",
                 "${workspaceFolder}/src/scene.c",
-                "${workspaceFolder}/src/texture.c",
+                "${workspaceFolder}/src/sprite.c",
 
                 "-L${workspaceFolder}/lib",
                 "-lglfw3_mt",
@@ -25,6 +25,38 @@
                 
                 "-g",
                 "-O0",
+                "-Wall",
+                "-DDEBUG",
+                "-I${workspaceFolder}/inc",
+                "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+            ],
+            "dependsOn": [],
+            "problemMatcher": [],
+        },
+        {
+            "label": "c_clang_release",
+            "group": "build",
+            "type": "shell",
+            "command": "clang",
+            "args": [
+                "${workspaceFolder}/src/main.c",
+                "${workspaceFolder}/src/core.c",
+                "${workspaceFolder}/src/graphics.c",
+                "${workspaceFolder}/src/layer.c",
+                "${workspaceFolder}/src/log.c",
+                "${workspaceFolder}/src/scene.c",
+                "${workspaceFolder}/src/sprite.c",
+
+                "-L${workspaceFolder}/lib",
+                "-lglfw3_mt",
+                "-lUser32",
+                "-lGdi32",
+                "-lShell32",
+                "-lopengl32",
+                "-lglew32",
+                
+                "-O2",
+                "-Wall",
                 "-I${workspaceFolder}/inc",
                 "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
             ],

@@ -1,14 +1,14 @@
 This file is just for me, to remember what happened because because I'm writing a thesis about it.
 
 
-#+-------------------------------------------- 24.02.2022 --------------------------------------------+
+#+-------------------------------------------- 24.01.2022 --------------------------------------------+
 
 Das Einführen scale in den Textures löste den Bug mit den weissen Linien.
 -> Engine kann jetzt endlich sogar für Rendering benutzt werden :D.
 
 Performance Verbesserungen durch die Verwendung von "memcpy" beim clearen von Layers.
 
-Ich habe eine kleine Scene kreiert um Pixa zu testen (img/engine_test_24.02.2022.png):
+Ich habe eine kleine Scene kreiert um Pixa zu testen (img/engine_test_24.01.2022.png):
 
 void main_onUpdate()
 {
@@ -34,7 +34,7 @@ Die Scene rendert mit bis zu 3500 FPS.
 
 Programmier Zeit: 10h
 
-#+-------------------------------------------- 26.02.2022 --------------------------------------------+
+#+-------------------------------------------- 26.01.2022 --------------------------------------------+
 
 Heute habe ich eine neue Version von Layern implementiert.
 Layers werden jetzt mehr wie Textures verwendet.
@@ -42,7 +42,7 @@ So ist die Engine für den Benutzer einheitlicher.
 
 Programmier Zeit: 3h
 
-#+-------------------------------------------- 27.02.2022 --------------------------------------------+
+#+-------------------------------------------- 27.01.2022 --------------------------------------------+
 
 Die Layers waren sehr verbuggt.
 Es gab einen Bug mit dem layer_draw_stack, da die Pointer immer noch zur alten Stelle gezeigt haben,
@@ -56,7 +56,7 @@ Jedoch muss ich, wenn man irgenwann die Texturen resizen kann, die clear_texture
 
 Programmier Zeit: 2h
 
-#+-------------------------------------------- 28.02.2022 --------------------------------------------+
+#+-------------------------------------------- 28.01.2022 --------------------------------------------+
 
 Heute habe ich nochmal eine neue und bessere Implementierung von den Layers geschrieben.
 Die Layers können jetzt viel einfacher kreiert werden als vorher.

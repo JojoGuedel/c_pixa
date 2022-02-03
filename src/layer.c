@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "Pixa/globals.h"
+#include "Pixa/core.h"
 #include "Pixa/internals.h"
 #include "Pixa/layer.h"
 
@@ -13,12 +13,12 @@ Layer **layer_draw_stack;
 size_t layer_draw_stack_count;
 
 #pragma region layers
-Layer *create_layer(int layer_level, Texture *draw_target)
+Layer *create_layer(int layer_level, Sprite *draw_target)
 {
     Layer *layer = malloc(sizeof(Layer));
 
     if (draw_target == NULL)
-        draw_target = create_texture(width, height, false, false);
+        draw_target = create_sprite(width, height, false, false);
     
     layer->layer_level = layer_level;
     layer->draw_target = draw_target;
@@ -30,7 +30,7 @@ Layer *create_layer(int layer_level, Texture *draw_target)
 
     Layer **temp = malloc((layer_draw_stack_count + 1) * sizeof(Layer *));
 
-    for(int offset = 0; offset < layer_draw_stack_count + 1; offset++)
+    for (int offset = 0; offset < layer_draw_stack_count + 1; offset++)
         if (offset == layer_draw_stack_count || layer_draw_stack[offset]->layer_level > layer->layer_level)
         {
             memcpy(temp, layer_draw_stack, offset * sizeof(Layer *));
@@ -53,7 +53,7 @@ bool destroy_layer(Layer *layer)
         // LOG: removing layer 0 is illegal
         return false;
 
-    for(int i = 0; i < layer_draw_stack_count; i++)
+    for (int i = 0; i < layer_draw_stack_count; i++)
     {
         if (layer_draw_stack[i] == layer)
         {

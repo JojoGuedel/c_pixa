@@ -3,5 +3,5 @@
 layer:
 - implement ussage of bool visible so that visibility can be set of each leayer
 
-textures:
-- rename to sprite and store x, y values in sprite itself
+sprites:
+- make a function set_sprite_size(int width, int height)

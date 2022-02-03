@@ -12,6 +12,18 @@
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal"
+        },
+        {
+            "name": "run c (release)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "preLaunchTask": "c_clang_release",
+            "program": "${workspaceFolder}/out/${workspaceFolderBasename}.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "console": "externalTerminal"
         }
     ]
 }
