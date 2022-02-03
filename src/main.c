@@ -30,7 +30,8 @@ int main(int argc, const char *args[])
     // create scenes
     create_scene(main_onCreate, main_onUpdate, main_onDestroy);
     // set clear color
-    clear_color(COLOR_VERY_DARK_GREY);
+    clear_color(COLOR_VERY_DARK_GREY); 
     // start the engine
     start_engine();
+    
 }

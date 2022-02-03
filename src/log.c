@@ -4,7 +4,7 @@
 #include "Pixa/globals.h"
 #include "Pixa/log.h"
 
-void log_msg(char *msg_type, char *sender, char *msg_format, ...)
+void log_msg(const char *msg_type, const char *sender, const char *msg_format, ...)
 {
     if (sender == NULL)
         sender = LOG_USER;

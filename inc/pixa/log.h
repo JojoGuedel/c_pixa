@@ -9,6 +9,6 @@
 #define LOG_GLFW        "GLFW"
 #define LOG_OPENGL      "OpenGL"
 
-void log_msg(char *msg_t, char *sender, char *msg_format, ...);
+void log_msg(const char *msg_t, const char *sender, const char *msg_format, ...);
 
 #endif
