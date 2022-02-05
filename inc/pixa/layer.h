@@ -14,11 +14,9 @@ typedef struct
     Sprite *draw_target;
 } Layer;
 
-Layer *create_layer(int layer_level, Sprite *draw_target);
-bool destroy_layer(Layer *layer);
+Layer *layer_create(int layer_level, Sprite *draw_target);
+bool layer_destroy(Layer *layer);
 
-void bind_layer(Layer *layer);
-void clear_color(Color color);
-void clear();
+void layer_bind(Layer *layer);
 
 #endif

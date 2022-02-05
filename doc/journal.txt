@@ -76,3 +76,30 @@ Mein Ziel ist es, fortlaufend ein Interface zu programmieren, dass das Managen v
 Daraus erhoffe ich mir dann eine gute Performance.
 
 Programmier Zeit: 3h
+
+#+-------------------------------------------- 03.02.2022 --------------------------------------------+
+
+Ich habe die log Funktion verbessert.
+Jetzt kann man ein LOG_LEVEL definieren, und es werden z.B. nur noch Errors und keine Warnings mehr angezeigt.
+
+Des weiteren habe ich die draw_line Funktion verbessert.
+Horizontale linien werden jetzt effizienter gerendert.
+Das bedeutet, das Rechtecke effizient gerendert werden können, da sie nur aus graden linien bestehen.
+
+Ich habe die funktion draw_rect jetzt implementiert.
+Das bedeuted, dass man jetzt endlich Rechtecke zeichnen kann, jedoch noch keine ausgefüllten Rechtecke.
+
+Die Globals sind jetzt nicht mehr im globals.h header, sondern im core.h.
+
+Programmier Zeit: 4h
+
+#+-------------------------------------------- 04.02.2022 --------------------------------------------+
+
+Ich habe fill_rect implementiert.
+Jetzt kann man auch ausgefüllte Rechtecke zeichnen
+
+Zudem habe ich viel code refactored.
+Jetzt sollte alles etwas einheitlicher sein.
+Jedoch wird vermutlich sowieso alles nochmal ändern.
+
+Programmier Zeit: 2h

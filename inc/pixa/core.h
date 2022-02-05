@@ -11,16 +11,29 @@ extern int height;
 extern double elapsed_time;
 extern double delta_time;
 
-void create_engine(int width, int height, int res_x, int res_y);
-void destroy_engine();
+/*! @brief Create the engine.
+ *  @param[in] width The width of the window
+ *  @param[in] height The height of the window
+ *  @param[in] res_x The amount of screen-pixels per base-layer-pixel in x direction
+ *  @param[in] res_y The amount of screen-pixels per base-layer-pixel in y direction
+ */
+void engine_create(int width, int height, int res_x, int res_y);
+/*! @brief Destory the engine.
+ */
+void engine_destroy();
 
-void start_engine();
-void stop_engine();
+/*! @brief Start the engine. */
+void engine_start();
+/*! @brief Stop the engine. */
+void engine_stop();
 
-int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)());
-void destroy_scene(int id);
-
+/*! @brief Get the width of the currently bound layer.
+ *  @return The width of currently bound layer.
+ */
 int get_width();
+/*! @brief Get the height of the currently bound layer.
+ *  @return The height of the currently bound layer.
+ */
 int get_height();
 
 #endif

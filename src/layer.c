@@ -3,6 +3,7 @@
 #include <string.h>
 
 #include "Pixa/core.h"
+#include "Pixa/graphics.h"
 #include "Pixa/internals.h"
 #include "Pixa/layer.h"
 
@@ -13,12 +14,12 @@ Layer **layer_draw_stack;
 size_t layer_draw_stack_count;
 
 #pragma region layers
-Layer *create_layer(int layer_level, Sprite *draw_target)
+Layer *layer_create(int layer_level, Sprite *draw_target)
 {
     Layer *layer = malloc(sizeof(Layer));
 
     if (draw_target == NULL)
-        draw_target = create_sprite(width, height, false, false);
+        draw_target = sprite_create(width, height, false, false);
     
     layer->layer_level = layer_level;
     layer->draw_target = draw_target;
@@ -47,7 +48,7 @@ Layer *create_layer(int layer_level, Sprite *draw_target)
     return layer;
 }
 
-bool destroy_layer(Layer *layer)
+bool layer_destroy(Layer *layer)
 {
     if (layer == LAYER_DEFAULT)
         // LOG: removing layer 0 is illegal
@@ -77,7 +78,7 @@ bool destroy_layer(Layer *layer)
     return false;
 }
 
-void bind_layer(Layer *layer)
+void layer_bind(Layer *layer)
 {
     if (layer == 0)
         layer_target = layer_default;

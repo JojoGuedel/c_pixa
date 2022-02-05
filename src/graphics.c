@@ -24,3 +24,8 @@ void draw_rect(int x, int y, int width, int height)
 {
     sprite_draw_rect(layer_target->draw_target, x, y, width, height, color_target);
 }
+
+void fill_rect(int x, int y, int width, int height)
+{
+    sprite_fill_rect(layer_target->draw_target, x, y, width, height, color_target);
+}

@@ -22,22 +22,23 @@ typedef struct
     Color *data;
 } Sprite;
 
-Sprite *create_sprite(int width, int height, bool filtered, bool clamp);
-void destroy_sprite(Sprite *sprite);
+Sprite *sprite_create(int width, int height, bool filtered, bool clamp);
+void sprite_destroy(Sprite *sprite);
 
-Sprite *copy_sprite(Sprite *src);
-void copy_sprite_data(Sprite *dst, Sprite *src);
+Sprite *sprite_copy(Sprite *src);
+void sprite_copy_data(Sprite *dst, Sprite *src);
 
-void update_sprite(Sprite *sprite);  
-
-void draw_sprite(Sprite *sprite);
-void clear_sprite(Sprite *sprite, Color color);
+void sprite_update(Sprite *sprite);
+void sprite_draw(Sprite *sprite);
+void sprite_clear(Sprite *sprite, Color color);
 
 void sprite_draw_pixel(Sprite *sprite, int x, int y, Color color);
 void sprite_draw_line(Sprite *sprite, int x1, int y1, int x2, int y2, Color color);
-void sprite_draw_rect(Sprite *sprite, int x1, int y1, int x2, int y2, Color color);
 
-void set_sprite_pos(Sprite *sprite, int x, int y);
-void set_sprite_scale(Sprite *sprite, float scale_x, float scale_y);
+void sprite_draw_rect(Sprite *sprite, int x, int y, int width, int height, Color color);
+void sprite_fill_rect(Sprite *sprite, int x, int y, int width, int height, Color color);
+
+void sprite_set_pos(Sprite *sprite, int x, int y);
+void sprite_set_scale(Sprite *sprite, float scale_x, float scale_y);
 
 #endif

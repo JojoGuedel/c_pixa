@@ -8,7 +8,7 @@
 #include "Pixa/log.h"
 #include "Pixa/sprite.h"
 
-Sprite *create_sprite(int width, int height, bool filtered, bool clamp)
+Sprite *sprite_create(int width, int height, bool filtered, bool clamp)
 {
     Sprite *sprite = malloc(sizeof(Sprite));
 
@@ -55,16 +55,16 @@ Sprite *create_sprite(int width, int height, bool filtered, bool clamp)
     return sprite;
 }
 
-void destroy_sprite(Sprite *sprite)
+void sprite_destroy(Sprite *sprite)
 {
     glDeleteTextures(1, &sprite->id);
 
     free(sprite->data);
 }
 
-Sprite *copy_sprite(Sprite *src)
+Sprite *sprite_copy(Sprite *src)
 {
-    Sprite * dst = create_sprite(src->width, src->height, false, false);
+    Sprite * dst = sprite_create(src->width, src->height, false, false);
 
     dst->scale_x = src->scale_x;
     dst->scale_y = src->scale_y;
@@ -76,18 +76,19 @@ Sprite *copy_sprite(Sprite *src)
     return dst;
 }
 
-void copy_sprite_data(Sprite *dst, Sprite *src)
+void sprite_copy_data(Sprite *dst, Sprite *src)
 {
     memcpy(dst->data, src->data, src->width * src->height * sizeof(Color));
 }
 
-void update_sprite(Sprite *sprite)
+
+void sprite_update(Sprite *sprite)
 {
     glBindTexture(GL_TEXTURE_2D, sprite->id);
     glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sprite->width, sprite->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, sprite->data);
 }
 
-void draw_sprite(Sprite *sprite)
+void sprite_draw(Sprite *sprite)
 {
     float x1 = -1.0f + (float) sprite->x / (float) width  * 2;
     float y1 =  1.0f - (float) sprite->y / (float) height * 2;
@@ -113,6 +114,13 @@ void draw_sprite(Sprite *sprite)
     glVertex3f(    x2,   y1, 0.0f);
     glEnd();
 }
+
+void sprite_clear(Sprite *sprite, Color color)
+{
+    for (int i = 0; i < sprite->width * sprite->height; i++)
+        sprite->data[i] = color;
+}
+
 
 void sprite_draw_pixel(Sprite *sprite, int x, int y, Color color)
 {
@@ -195,19 +203,38 @@ void sprite_draw_rect(Sprite *sprite, int x, int y, int w, int h, Color color)
     sprite_draw_line(sprite, x + w, y    , x + w, y + h + 1, color);
 }
 
-void clear_sprite(Sprite *sprite, Color color)
+void sprite_fill_rect(Sprite *sprite, int x, int y, int w, int h, Color color)
 {
-    for (int i = 0; i < sprite->width * sprite->height; i++)
-        sprite->data[i] = color;
+    int x2 = x + w;
+    int y2 = y + h;
+
+    if (x > sprite->width)
+        return;
+    if (y > sprite->height)
+        return;
+
+    if (x < 0)
+        x = 0;
+    if (y < 0)
+        y = 0;
+
+    if (x2 > sprite->width)
+        return;
+    if (y2 > sprite->height)
+        return;
+    
+    for(int _y = y; _y < y2 && _y < sprite->height; _y++)
+        for(int _x = x; _x < x2 && _x < sprite->width; _x++)
+            sprite->data[_y * sprite->width + _x] = color;
 }
 
-void set_sprite_pos(Sprite *sprite, int x, int y)
+void sprite_set_pos(Sprite *sprite, int x, int y)
 {
     sprite->x = x;
     sprite->y = y;
 }
 
-void set_sprite_scale(Sprite *sprite, float scale_x, float scale_y)
+void sprite_set_scale(Sprite *sprite, float scale_x, float scale_y)
 {
     sprite->scale_x = scale_x;
     sprite->scale_y = scale_y;

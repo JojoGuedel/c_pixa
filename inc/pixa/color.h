@@ -36,4 +36,6 @@ typedef struct
     uint8_t a;
 } Color;
 
+Color color_hsv(int h, int s, int v);
+
 #endif

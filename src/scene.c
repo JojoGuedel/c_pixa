@@ -7,7 +7,7 @@
 Scene *scenes;
 size_t scene_c;
 
-int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
+int scene_create(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
 {
     for (int i = 0; i < scene_c; i++)
     {
@@ -36,14 +36,16 @@ int create_scene(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
     scenes[scene_c].onUpdate       = onUpdate;
     scenes[scene_c].onDestroy      = onDestroy;
 
-    scenes[scene_c].onCreate();
+    if (scenes[scene_c].onCreate != NULL)
+        scenes[scene_c].onCreate();
 
     return scene_c++;
 }
 
-void destroy_scene(int id)
+void scene_destroy(int id)
 {
-    scenes[id].onDestroy();
+    if (scenes[scene_c].onDestroy != NULL)
+        scenes[id].onDestroy();
 
     scenes[id].is_active            = false;
     scenes[id].onCreate             = NULL;

@@ -17,6 +17,12 @@
         "istream": "c",
         "ostream": "c",
         "xlocmon": "c",
-        "xlocnum": "c"
+        "xlocnum": "c",
+        "fstream": "c",
+        "map": "c",
+        "sstream": "c",
+        "streambuf": "c",
+        "unordered_map": "c",
+        "cstdlib": "c"
     }
 }

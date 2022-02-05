@@ -32,7 +32,7 @@ void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsi
     printf("[DEBUG] gl: %s\n", msg);
 }
 
-void create_engine(int w, int h, int res_x, int res_y)
+void engine_create(int w, int h, int res_x, int res_y)
 {
     // TODO: Error checking
     // TODO: Logging
@@ -71,11 +71,11 @@ void create_engine(int w, int h, int res_x, int res_y)
     color_target = COLOR_WHITE;
 
     // init layer 0
-    Sprite *draw_target = create_sprite(width / res_x, height / res_y, false, false);
-    set_sprite_scale(draw_target, 1.0f / (float) res_x, 1.0f / (float) res_y);
+    Sprite *draw_target = sprite_create(width / res_x, height / res_y, false, false);
+    sprite_set_scale(draw_target, 1.0f / (float) res_x, 1.0f / (float) res_y);
 
     layer_draw_stack_count = 0;
-    layer_target = layer_default = create_layer(0, draw_target);
+    layer_target = layer_default = layer_create(0, draw_target);
 
     // TODO: move this to resize event
     glViewport(0, 0, width, height);
@@ -83,7 +83,7 @@ void create_engine(int w, int h, int res_x, int res_y)
     // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
 
-void destroy_engine()
+void engine_destroy()
 {
     for (int i = 0; i < scene_c; i++)
         scenes[i].onDestroy();
@@ -96,10 +96,8 @@ void destroy_engine()
     glfwTerminate();
 }
 
-void start_engine()
+void engine_start()
 {
-    // TODO: multithreading
-
     while (active)
     {
         delta_time = glfwGetTime() - elapsed_time;
@@ -122,8 +120,8 @@ void start_engine()
 
         for (int i = 0; i < layer_draw_stack_count; i++)
         {
-            update_sprite(layer_draw_stack[i]->draw_target);
-            draw_sprite(layer_draw_stack[i]->draw_target);
+            sprite_update(layer_draw_stack[i]->draw_target);
+            sprite_draw(layer_draw_stack[i]->draw_target);
         }
 
         glfwSwapBuffers(window);
@@ -138,7 +136,7 @@ void start_engine()
     glfwTerminate();
 }
 
-void stop_engine()
+void engine_stop()
 {
     active = false;
 }
