@@ -23,6 +23,7 @@
         "sstream": "c",
         "streambuf": "c",
         "unordered_map": "c",
-        "cstdlib": "c"
+        "cstdlib": "c",
+        "xlocale": "c"
     }
 }

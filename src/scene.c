@@ -7,20 +7,20 @@
 Scene *scenes;
 size_t scene_c;
 
-int scene_create(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
+int scene_create(void (*on_create)(), void (*on_update)(), void (*on_destroy)())
 {
     for (int i = 0; i < scene_c; i++)
     {
-        if (scenes[i].onCreate  == NULL &&
-            scenes[i].onUpdate  == NULL &&
-            scenes[i].onDestroy == NULL)
+        if (scenes[i].on_create  == NULL &&
+            scenes[i].on_update  == NULL &&
+            scenes[i].on_destroy == NULL)
         {
             scenes[scene_c].is_active      = true;
-            scenes[scene_c].onCreate       = onCreate;
-            scenes[scene_c].onUpdate       = onUpdate;
-            scenes[scene_c].onDestroy      = onDestroy;
+            scenes[scene_c].on_create       = on_create;
+            scenes[scene_c].on_update       = on_update;
+            scenes[scene_c].on_destroy      = on_destroy;
 
-            scenes[scene_c].onCreate();
+            scenes[scene_c].on_create();
 
             return i;
         }
@@ -32,25 +32,25 @@ int scene_create(void (*onCreate)(), void (*onUpdate)(), void (*onDestroy)())
     scenes = temp;
 
     scenes[scene_c].is_active      = true;
-    scenes[scene_c].onCreate       = onCreate;
-    scenes[scene_c].onUpdate       = onUpdate;
-    scenes[scene_c].onDestroy      = onDestroy;
+    scenes[scene_c].on_create       = on_create;
+    scenes[scene_c].on_update       = on_update;
+    scenes[scene_c].on_destroy      = on_destroy;
 
-    if (scenes[scene_c].onCreate != NULL)
-        scenes[scene_c].onCreate();
+    if (scenes[scene_c].on_create != NULL)
+        scenes[scene_c].on_create();
 
     return scene_c++;
 }
 
 void scene_destroy(int id)
 {
-    if (scenes[scene_c].onDestroy != NULL)
-        scenes[id].onDestroy();
+    if (scenes[scene_c].on_destroy != NULL)
+        scenes[id].on_destroy();
 
     scenes[id].is_active            = false;
-    scenes[id].onCreate             = NULL;
-    scenes[id].onUpdate             = NULL;
-    scenes[id].onDestroy            = NULL;
+    scenes[id].on_create             = NULL;
+    scenes[id].on_update             = NULL;
+    scenes[id].on_destroy            = NULL;
 
     // TODO: deallocate
 }

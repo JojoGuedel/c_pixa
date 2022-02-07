@@ -7,7 +7,8 @@
             "type": "shell",
             "command": "clang",
             "args": [
-                "${workspaceFolder}/src/main.c",
+                "${workspaceFolder}/examples/rainbow/main.c",
+
                 "${workspaceFolder}/src/color.c",
                 "${workspaceFolder}/src/core.c",
                 "${workspaceFolder}/src/graphics.c",
@@ -40,7 +41,8 @@
             "type": "shell",
             "command": "clang",
             "args": [
-                "${workspaceFolder}/src/main.c",
+                "${workspaceFolder}/examples/rainbow/main.c",
+
                 "${workspaceFolder}/src/color.c",
                 "${workspaceFolder}/src/core.c",
                 "${workspaceFolder}/src/graphics.c",

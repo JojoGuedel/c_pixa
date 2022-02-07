@@ -7,4 +7,3 @@ layer:
 - implement ussage of bool visible so that visibility can be set of each leayer
 
 sprites:
-- implement sprite_fill_rect

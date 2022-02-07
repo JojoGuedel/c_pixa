@@ -86,7 +86,7 @@ void engine_create(int w, int h, int res_x, int res_y)
 void engine_destroy()
 {
     for (int i = 0; i < scene_c; i++)
-        scenes[i].onDestroy();
+        scenes[i].on_destroy();
     free(scenes);
 
     for (int i = 0; i < layer_draw_stack_count; i++)
@@ -111,7 +111,7 @@ void engine_start()
             if (!scenes[i].is_active)
                 continue;
 
-            scenes[i].onUpdate();
+            scenes[i].on_update();
         }
 
         // TODO: move this to prepare_drawing()

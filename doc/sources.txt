@@ -1,0 +1,2 @@
+OpenGL computeshaders: http://wili.cc/blog/opengl-cs.html
+OpenGL wiki: https://www.khronos.org/opengl/wiki
