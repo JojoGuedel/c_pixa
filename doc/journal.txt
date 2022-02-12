@@ -103,3 +103,13 @@ Jetzt sollte alles etwas einheitlicher sein.
 Jedoch wird vermutlich sowieso alles nochmal ändern.
 
 Programmier Zeit: 2h
+
+#+-------------------------------------------- 12.02.2022 --------------------------------------------+
+
+Ich habe es endlich geschafft, Pixa zu einem lib-file mit clang zu compilen.
+Jetzt wird zuerst ein lib-file generiert und erst dann wird das gewünschte Projekt kompiliert und ausgeführt.
+Das macht es deutlich einfacher, ein Projekt mit Pixa zu kreieren,
+da nicht jedes Mal der ganze sourcecode neu kompiliert werden muss,
+sondern nur noch pixa32s.lib gelinkt werden muss.
+
+Programier Zeit: 3h

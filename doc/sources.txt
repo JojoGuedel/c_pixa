@@ -1,4 +1,7 @@
 OpenGL computeshaders: http://wili.cc/blog/opengl-cs.html
 OpenGL wiki: https://www.khronos.org/opengl/wiki
 
-OLC Pixel Game Engine: https://github.com/OneLoneCoder/olcPixelGameEngine
+GLFW: https://www.glfw.org/
+GLEW: https://github.com/nigels-com/glew
+
+(OLC Pixel Game Engine: https://github.com/OneLoneCoder/olcPixelGameEngine)

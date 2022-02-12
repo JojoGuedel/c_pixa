@@ -1,3 +1,6 @@
-doc/img/
-out/
-examples/compute_shader/
+!/out/
+/out/*
+!/out/lib/
+
+/doc/img/
+/examples/compute_shader/

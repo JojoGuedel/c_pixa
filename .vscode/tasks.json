@@ -9,32 +9,31 @@
             "args": [
                 "${workspaceFolder}/examples/rainbow/main.c",
 
-                "${workspaceFolder}/src/color.c",
-                "${workspaceFolder}/src/core.c",
-                "${workspaceFolder}/src/graphics.c",
-                "${workspaceFolder}/src/layer.c",
-                "${workspaceFolder}/src/log.c",
-                "${workspaceFolder}/src/scene.c",
-                "${workspaceFolder}/src/sprite.c",
+                "${workspaceFolder}/src/*.c",
                 
                 "-L${workspaceFolder}/lib",
                 "-lUser32",
                 "-lGdi32",
                 "-lShell32",
-                "-lglfw3_mt",
                 "-lopengl32",
+                
+                "-lglfw3_mt",
                 "-lglew32s",
                 
+                "-l./out/lib/pixa32s",
+
                 "-Wall",
                 "-Wno-deprecated-declarations",
                 
                 "-g",
-                "-O0",
+                "-O2",
                 "-DDEBUG",
                 "-I${workspaceFolder}/inc",
                 "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
             ],
-            "dependsOn": [],
+            "dependsOn": [
+                "c_clang_lib"
+            ],
             "problemMatcher": [],
         },
         {
@@ -45,28 +44,44 @@
             "args": [
                 "${workspaceFolder}/examples/rainbow/main.c",
 
-                "${workspaceFolder}/src/color.c",
-                "${workspaceFolder}/src/core.c",
-                "${workspaceFolder}/src/graphics.c",
-                "${workspaceFolder}/src/layer.c",
-                "${workspaceFolder}/src/log.c",
-                "${workspaceFolder}/src/scene.c",
-                "${workspaceFolder}/src/sprite.c",
+                "${workspaceFolder}/src/*.c",
                 
                 "-L${workspaceFolder}/lib",
-                "-lglfw3_mt",
                 "-lUser32",
                 "-lGdi32",
                 "-lShell32",
                 "-lopengl32",
+                
+                "-lglfw3_mt",
                 "-lglew32s",
                 
+                "-l./out/lib/pixa32s",
+
                 "-Wall",
                 "-Wno-deprecated-declarations",
 
                 "-O2",
                 "-I${workspaceFolder}/inc",
                 "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+            ],
+            "dependsOn": [
+                "c_clang_lib"
+            ],
+            "problemMatcher": [],
+        },
+        {
+            "label": "c_clang_lib",
+            "group": "build",
+            "type": "shell",
+            "command": "clang",
+            "args": [
+                "${workspaceFolder}/src/*.c",
+
+                "-shared",
+                
+                "-I${workspaceFolder}/inc",
+                "-o${workspaceFolder}/out/lib/pixa32s.lib",
+                "-fuse-ld=llvm-lib"
             ],
             "dependsOn": [],
             "problemMatcher": [],
