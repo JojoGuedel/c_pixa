@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define GLEW_STATIC
+
 #include "GL/glew.h"
 #include "GLFW/glfw3.h"
 
@@ -116,6 +118,7 @@ void engine_start()
 
         // TODO: move this to prepare_drawing()
         glEnable(GL_BLEND);
+        glActiveTexture(GL_TEXTURE0);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         for (int i = 0; i < layer_draw_stack_count; i++)

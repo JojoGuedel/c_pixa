@@ -18,16 +18,18 @@
                 "${workspaceFolder}/src/sprite.c",
                 
                 "-L${workspaceFolder}/lib",
-                "-lglfw3_mt",
                 "-lUser32",
                 "-lGdi32",
                 "-lShell32",
+                "-lglfw3_mt",
                 "-lopengl32",
-                "-lglew32",
+                "-lglew32s",
+                
+                "-Wall",
+                "-Wno-deprecated-declarations",
                 
                 "-g",
                 "-O0",
-                "-Wall",
                 "-DDEBUG",
                 "-I${workspaceFolder}/inc",
                 "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
@@ -57,10 +59,12 @@
                 "-lGdi32",
                 "-lShell32",
                 "-lopengl32",
-                "-lglew32",
+                "-lglew32s",
                 
-                "-O2",
                 "-Wall",
+                "-Wno-deprecated-declarations",
+
+                "-O2",
                 "-I${workspaceFolder}/inc",
                 "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
             ],
