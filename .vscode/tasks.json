@@ -55,7 +55,6 @@
                 "-lglew32s",
                 "-lpixa32s",
                 
-
                 "-Wall",
                 "-Wno-deprecated-declarations",
 
@@ -75,8 +74,6 @@
             "command": "clang",
             "args": [
                 "${workspaceFolder}/src/*.c",
-
-                "-shared",
                 
                 "-I${workspaceFolder}/inc",
                 "-o${workspaceFolder}/lib/pixa32s.lib",
