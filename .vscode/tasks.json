@@ -19,8 +19,7 @@
                 
                 "-lglfw3_mt",
                 "-lglew32s",
-                
-                "-l./out/lib/pixa32s",
+                "-lpixa32s",
 
                 "-Wall",
                 "-Wno-deprecated-declarations",
@@ -54,8 +53,8 @@
                 
                 "-lglfw3_mt",
                 "-lglew32s",
+                "-lpixa32s",
                 
-                "-l./out/lib/pixa32s",
 
                 "-Wall",
                 "-Wno-deprecated-declarations",
@@ -80,7 +79,7 @@
                 "-shared",
                 
                 "-I${workspaceFolder}/inc",
-                "-o${workspaceFolder}/out/lib/pixa32s.lib",
+                "-o${workspaceFolder}/lib/pixa32s.lib",
                 "-fuse-ld=llvm-lib"
             ],
             "dependsOn": [],
