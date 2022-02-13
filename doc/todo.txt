@@ -1,9 +1,11 @@
 // TODO: implement textures for gpu (olc::Decal)
 
 core:
-- multithreading so that windows-events get pulled on the main thread and the engine-stuff runs on an other thread
 
 layer:
 - implement ussage of bool visible so that visibility can be set of each leayer
+
+keys:
+- fix keyboard layout
 
 sprites:

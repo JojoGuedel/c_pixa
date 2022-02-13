@@ -113,3 +113,13 @@ da nicht jedes Mal der ganze sourcecode neu kompiliert werden muss,
 sondern nur noch pixa32s.lib gelinkt werden muss.
 
 Programier Zeit: 3h
+
+#+-------------------------------------------- 13.02.2022 --------------------------------------------+
+
+Jetzt gibt es endlich userinput.
+Jedoch muss ich noch schauen, wie ich das mit dem layout mache...
+Momentan wird einfach das von GLFW übernommen.
+GLFW benutzt qwerty stat qwertz.
+Ich möchte das sowieso nochmals überarbeiten, dammit ich einen bool[] habe statt eine callback funktion.
+
+Programier Zeit: 1h

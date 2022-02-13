@@ -18,6 +18,9 @@ extern Layer *layer_target;
 extern Layer **layer_draw_stack;
 extern size_t layer_draw_stack_count;
 
+extern void (*on_key_pressed_callback)(int key, int action, int flags);
+extern void (*on_mouse_pressed_callback)(int button, int action, int flags);
+
 extern GLFWwindow* window;
 
 #endif

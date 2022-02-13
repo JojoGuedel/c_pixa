@@ -19,19 +19,37 @@ bool active;
 int width;
 int height;
 
+double mouse_x;
+double mouse_y;
+
+void (*on_key_pressed_callback)(int key, int action, int flags);
+void (*on_mouse_pressed_callback)(int button, int action, int flags);
+
 double elapsed_time;
 double delta_time;
 
 GLFWwindow* window;
+
+void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *msg, const void *user_data)
+{
+    printf("[DEBUG] gl: %s\n", msg);
+}
 
 void glfw_error_callback(int error, const char *desc)
 {
     printf("[ERROR] glfw: %i %s\n", error, desc);
 }
 
-void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *msg, const void *user_data)
+void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int flags)
 {
-    printf("[DEBUG] gl: %s\n", msg);
+    if (on_key_pressed_callback != NULL)
+        on_key_pressed_callback(key, action, flags);
+}
+
+void glfw_mouse_callback(GLFWwindow* window, int button, int action, int flags)
+{
+    if (on_mouse_pressed_callback != NULL)
+        on_mouse_pressed_callback(button, action, flags);
 }
 
 void engine_create(int w, int h, int res_x, int res_y)
@@ -64,6 +82,14 @@ void engine_create(int w, int h, int res_x, int res_y)
 
     width = w;
     height = h;
+
+    glfwGetCursorPos(window,  &mouse_x, &mouse_y);
+
+    on_key_pressed_callback = NULL;
+    on_mouse_pressed_callback = NULL;
+
+    glfwSetKeyCallback(window, glfw_key_callback);
+    glfwSetMouseButtonCallback(window, glfw_mouse_callback);
 
     delta_time = 0;
     elapsed_time = glfwGetTime();
@@ -106,7 +132,7 @@ void engine_start()
         elapsed_time = glfwGetTime();
 
         glfwPollEvents();
-        // TODO: handle events
+        glfwGetCursorPos(window,  &mouse_x, &mouse_y);
 
         for (int i = 0; i < scene_c; i++)
         {
@@ -142,6 +168,12 @@ void engine_start()
 void engine_stop()
 {
     active = false;
+}
+
+void engine_set_user_input(void (*on_key_pressed)(int key, int action, int flags), void (*on_mouse_pressed)(int button, int action, int flags))
+{
+    on_key_pressed_callback = on_key_pressed;
+    on_mouse_pressed_callback = on_mouse_pressed;
 }
 
 int get_width()
