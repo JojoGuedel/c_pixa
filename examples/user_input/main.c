@@ -8,12 +8,12 @@
 #include "Pixa/log.h"
 #include "Pixa/scene.h"
 
-void on_key_pressed(int key, int action, int flags)
+void key_cb(int key, int action, int flags)
 {
     log_info("%c: %i", key, action);
 }
 
-void on_mouse_pressed(int button, int action, int flags)
+void mouse_cb(int button, int action, int flags)
 {
     log_info("%c: %i", button, action);
 }
@@ -28,7 +28,7 @@ int main(int argc, const char *args[])
     // create engine
     engine_create(500, 500, 1, 1);
     // set keyboard and mouse callback
-    engine_set_user_input(on_key_pressed, on_mouse_pressed);
+    engine_set_user_input(key_cb, mouse_cb);
     // create scenes
     scene_create(NULL, on_update, NULL);
     // set clear color

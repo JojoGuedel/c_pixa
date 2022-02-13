@@ -22,8 +22,8 @@ int height;
 double mouse_x;
 double mouse_y;
 
-void (*on_key_pressed_callback)(int key, int action, int flags);
-void (*on_mouse_pressed_callback)(int button, int action, int flags);
+void (*on_key_callback)(int key, int action, int flags);
+void (*on_mouse_callback)(int button, int action, int flags);
 
 double elapsed_time;
 double delta_time;
@@ -42,14 +42,14 @@ void glfw_error_callback(int error, const char *desc)
 
 void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int flags)
 {
-    if (on_key_pressed_callback != NULL)
-        on_key_pressed_callback(key, action, flags);
+    if (on_key_callback != NULL)
+        on_key_callback(key, action, flags);
 }
 
 void glfw_mouse_callback(GLFWwindow* window, int button, int action, int flags)
 {
-    if (on_mouse_pressed_callback != NULL)
-        on_mouse_pressed_callback(button, action, flags);
+    if (on_mouse_callback != NULL)
+        on_mouse_callback(button, action, flags);
 }
 
 void engine_create(int w, int h, int res_x, int res_y)
@@ -85,8 +85,8 @@ void engine_create(int w, int h, int res_x, int res_y)
 
     glfwGetCursorPos(window,  &mouse_x, &mouse_y);
 
-    on_key_pressed_callback = NULL;
-    on_mouse_pressed_callback = NULL;
+    on_key_callback = NULL;
+    on_mouse_callback = NULL;
 
     glfwSetKeyCallback(window, glfw_key_callback);
     glfwSetMouseButtonCallback(window, glfw_mouse_callback);
@@ -170,10 +170,10 @@ void engine_stop()
     active = false;
 }
 
-void engine_set_user_input(void (*on_key_pressed)(int key, int action, int flags), void (*on_mouse_pressed)(int button, int action, int flags))
+void engine_set_user_input(void (*_on_key_callback)(int key, int action, int flags), void (*_on_mouse_callback)(int button, int action, int flags))
 {
-    on_key_pressed_callback = on_key_pressed;
-    on_mouse_pressed_callback = on_mouse_pressed;
+    on_key_callback = _on_key_callback;
+    on_mouse_callback = _on_mouse_callback;
 }
 
 int get_width()
