@@ -5,82 +5,156 @@
             "label": "c_clang_debug",
             "group": "build",
             "type": "shell",
-            "command": "clang",
-            "args": [
-                "${workspaceFolder}/examples/user_input/main.c",
+            "windows":{
+                "command": "clang",
+                "args": [
+                    "${workspaceFolder}/examples/user_input/main.c",
+    
+                    "${workspaceFolder}/src/*.c",
+                    
+                    "-L${workspaceFolder}/lib/windows",
+                    "-lUser32",
+                    "-lGdi32",
+                    "-lShell32",
+                    "-lopengl32",
+                    
+                    "-lglfw3_mt",
+                    "-lglew32s",
+                    "-lpixa32s",
+    
+                    "-Wall",
+                    "-Wno-deprecated-declarations",
+                    
+                    "-g",
+                    "-O0",
+                    "-DDEBUG",
+                    "-I${workspaceFolder}/inc",
+                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                ],
+            },
+            "linux":{
+                "command": "clang",
+                "args": [
+                    "${workspaceFolder}/examples/user_input/main.c",
 
-                "${workspaceFolder}/src/*.c",
-                
-                "-L${workspaceFolder}/lib",
-                "-lUser32",
-                "-lGdi32",
-                "-lShell32",
-                "-lopengl32",
-                
-                "-lglfw3_mt",
-                "-lglew32s",
-                "-lpixa32s",
+                    "${workspaceFolder}/src/*.c",
 
-                "-Wall",
-                "-Wno-deprecated-declarations",
-                
-                "-g",
-                "-O2",
-                "-DDEBUG",
-                "-I${workspaceFolder}/inc",
-                "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
-            ],
-            "dependsOn": [
-                "c_clang_lib"
-            ],
+                    "-lm",
+                    "-lGL",
+
+                    "-L${workspaceFolder}/lib/linux",
+                    "-lglfw3",
+                    "-lGLEW",
+                    "-lpixa",
+
+                    "-Wall",
+                    "-Wno-deprecated-declarations",
+                    
+                    "-g",
+                    "-O0",
+                    "-DDEBUG",
+                    "-I${workspaceFolder}/inc",
+                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                ],
+            },
+            "dependsOn": ["c_clang_lib"],
             "problemMatcher": [],
         },
         {
             "label": "c_clang_release",
             "group": "build",
             "type": "shell",
-            "command": "clang",
-            "args": [
-                "${workspaceFolder}/examples/user_input/main.c",
+            "windows":{
+                "command": "clang",
+                "args": [
+                    "${workspaceFolder}/examples/user_input/main.c",
+    
+                    "${workspaceFolder}/src/*.c",
+                    
+                    "-L${workspaceFolder}/lib/windows",
+                    "-lUser32",
+                    "-lGdi32",
+                    "-lShell32",
+                    "-lopengl32",
+                    
+                    "-lglfw3_mt",
+                    "-lglew32s",
+                    "-lpixa32s",
+                    
+                    "-Wall",
+                    "-Wno-deprecated-declarations",
+    
+                    "-O2",
+                    "-I${workspaceFolder}/inc",
+                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                ],
+            },
+            "linux":{
+                "command": "clang",
+                "args": [
+                    "${workspaceFolder}/examples/user_input/main.c",
 
-                "${workspaceFolder}/src/*.c",
-                
-                "-L${workspaceFolder}/lib",
-                "-lUser32",
-                "-lGdi32",
-                "-lShell32",
-                "-lopengl32",
-                
-                "-lglfw3_mt",
-                "-lglew32s",
-                "-lpixa32s",
-                
-                "-Wall",
-                "-Wno-deprecated-declarations",
+                    "${workspaceFolder}/src/*.c",
 
-                "-O2",
-                "-I${workspaceFolder}/inc",
-                "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
-            ],
-            "dependsOn": [
-                "c_clang_lib"
-            ],
+                    "-L${workspaceFolder}/lib/linux",
+                    "-lglfw3_mt",
+                    "-lGLEW",
+                    "-lpixa",
+
+                    "-Wall",
+                    "-Wno-deprecated-declarations",
+                    
+                    "-O2",
+                    "-I${workspaceFolder}/inc",
+                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                ],
+            },
             "problemMatcher": [],
+            "dependsOn": ["c_clang_lib"]
         },
         {
             "label": "c_clang_lib",
             "group": "build",
             "type": "shell",
-            "command": "clang",
-            "args": [
-                "${workspaceFolder}/src/*.c",
-                
-                "-I${workspaceFolder}/inc",
-                "-o${workspaceFolder}/lib/pixa32s.lib",
-                "-fuse-ld=llvm-lib"
-            ],
+            "windows": {
+                "command": "clang",
+                "args": [
+                    "${workspaceFolder}/src/*.c",
+                    
+                    "-I${workspaceFolder}/inc",
+                    "-o${workspaceFolder}/lib/windows/pixa32s.lib",
+                    "-fuse-ld=llvm-lib"
+                ],
+            },
+            "linux": {
+                "command": "llvm-ar",
+                "args": [
+                    "-rv",
+                    "${workspaceFolder}/lib/linux/libpixa.a",
+                    "${workspaceFolder}/out/obj/*.o",
+                ],
+                "dependsOn": ["c_clang_obj"],
+            },
+            "problemMatcher": [],
+        },
+        {
+            "label": "c_clang_obj",
+            "group": "build",
+            "type": "shell",
+            "linux": {
+                "options": {
+                    "cwd": "${workspaceFolder}/out/obj"
+                },
+                "command": "clang",
+                "args": [
+                    "-c",
+                    "${workspaceFolder}/src/*.c",
+                    
+                    "-I${workspaceFolder}/inc",
+                ],
+            },
             "dependsOn": [],
             "problemMatcher": [],
-        }
+        },
     ]
 }

@@ -1,4 +1,5 @@
 #include <math.h>
+#include <stddef.h>
 
 #define LOG_LEVEL LOG_INFO
 

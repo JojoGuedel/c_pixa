@@ -1,3 +1,4 @@
 /out/*
 /doc/img/*
 /examples/compute_shader/*
+/compile_flags.txt

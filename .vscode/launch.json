@@ -3,7 +3,7 @@
     "configurations": [
         {
             "name": "run c (debug)",
-            "type": "cppvsdbg",
+            "type": "lldb",
             "request": "launch",
             "preLaunchTask": "c_clang_debug",
             "program": "${workspaceFolder}/out/${workspaceFolderBasename}.exe",
@@ -15,7 +15,7 @@
         },
         {
             "name": "run c (release)",
-            "type": "cppvsdbg",
+            "type": "lldb",
             "request": "launch",
             "preLaunchTask": "c_clang_release",
             "program": "${workspaceFolder}/out/${workspaceFolderBasename}.exe",
