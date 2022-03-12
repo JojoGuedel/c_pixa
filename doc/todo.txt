@@ -1,4 +1,25 @@
 // TODO: implement textures for gpu (olc::Decal)
+#============================================#
+#             reached milestones             #
+#============================================#
+- display window
+- layering
+- handle sceens
+- basic line drawing
+- basic rectangle drawing
+- filled shapes
+- optimized line drawing
+- optimized rectangle drawing
+- basic user input
+#============================================#
+#                 working on                 #
+#============================================#
+#============================================#
+#                 milestones                 #
+#============================================#
+- advanced user input
+- basic text rendering
+- advanced text rendering
 
 core:
 

@@ -6,24 +6,36 @@
             "type": "lldb",
             "request": "launch",
             "preLaunchTask": "c_clang_debug",
-            "program": "${workspaceFolder}/out/${workspaceFolderBasename}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "externalTerminal"
+            "console": "externalTerminal",
+
+            "windows": {
+                "program": "${workspaceFolder}/out/windows/${workspaceFolderBasename}.exe",
+            },
+            "linux": {
+                "program": "${workspaceFolder}/out/linux/${workspaceFolderBasename}",
+            }
         },
         {
             "name": "run c (release)",
             "type": "lldb",
             "request": "launch",
             "preLaunchTask": "c_clang_release",
-            "program": "${workspaceFolder}/out/${workspaceFolderBasename}.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "console": "externalTerminal"
+            "console": "externalTerminal",
+
+            "windows": {
+                "program": "${workspaceFolder}/out/windows/${workspaceFolderBasename}.exe",
+            },
+            "linux": {
+                "program": "${workspaceFolder}/out/linux/${workspaceFolderBasename}",
+            }
         }
     ]
 }

@@ -137,7 +137,7 @@ void sprite_draw_line(Sprite *sprite, int x1, int y1, int x2, int y2, Color colo
 
     if (dx == 0)
     {
-        if (x1 < 0 || x1 > sprite->width)
+        if (x1 < 0 || x1 >= sprite->width)
             return;
 
         if (dy < 0)
@@ -157,7 +157,7 @@ void sprite_draw_line(Sprite *sprite, int x1, int y1, int x2, int y2, Color colo
     }
     if (dy == 0)
     {
-        if (y1 < 0 || y1 > sprite->height)
+        if (y1 < 0 || y1 >= sprite->height)
             return;
 
         if (dx < 0)
@@ -199,8 +199,8 @@ void sprite_draw_rect(Sprite *sprite, int x, int y, int w, int h, Color color)
 {
     sprite_draw_line(sprite, x + 1, y    , x + w, y        , color);
     sprite_draw_line(sprite, x    , y + h, x + w, y + h    , color);
-    sprite_draw_line(sprite, x    , y    , x    , y + h    , color);
-    sprite_draw_line(sprite, x + w, y    , x + w, y + h + 1, color);
+    sprite_draw_line(sprite, x    , y    , x    , y + h - 1, color);
+    sprite_draw_line(sprite, x + w, y + 1, x + w, y + h + 1, color);
 }
 
 void sprite_fill_rect(Sprite *sprite, int x, int y, int w, int h, Color color)

@@ -8,7 +8,7 @@
             "windows":{
                 "command": "clang",
                 "args": [
-                    "${workspaceFolder}/examples/user_input/main.c",
+                    "${workspaceFolder}/examples/shapes/main.c",
     
                     "${workspaceFolder}/src/*.c",
                     
@@ -29,20 +29,19 @@
                     "-O0",
                     "-DDEBUG",
                     "-I${workspaceFolder}/inc",
-                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                    "-o${workspaceFolder}/out/windows/${workspaceFolderBasename}.exe"
                 ],
             },
             "linux":{
                 "command": "clang",
                 "args": [
-                    "${workspaceFolder}/examples/user_input/main.c",
+                    "${workspaceFolder}/examples/shapes/main.c",
 
                     "${workspaceFolder}/src/*.c",
-
+                    
+                    "-L${workspaceFolder}/lib/linux",
                     "-lm",
                     "-lGL",
-
-                    "-L${workspaceFolder}/lib/linux",
                     "-lglfw3",
                     "-lGLEW",
                     "-lpixa",
@@ -54,7 +53,7 @@
                     "-O0",
                     "-DDEBUG",
                     "-I${workspaceFolder}/inc",
-                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                    "-o${workspaceFolder}/out/linux/${workspaceFolderBasename}"
                 ],
             },
             "dependsOn": ["c_clang_lib"],
@@ -67,7 +66,7 @@
             "windows":{
                 "command": "clang",
                 "args": [
-                    "${workspaceFolder}/examples/user_input/main.c",
+                    "${workspaceFolder}/examples/shapes/main.c",
     
                     "${workspaceFolder}/src/*.c",
                     
@@ -86,18 +85,20 @@
     
                     "-O2",
                     "-I${workspaceFolder}/inc",
-                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                    "-o${workspaceFolder}/out/windows/${workspaceFolderBasename}.exe"
                 ],
             },
             "linux":{
                 "command": "clang",
                 "args": [
-                    "${workspaceFolder}/examples/user_input/main.c",
+                    "${workspaceFolder}/examples/shapes/main.c",
 
                     "${workspaceFolder}/src/*.c",
 
                     "-L${workspaceFolder}/lib/linux",
-                    "-lglfw3_mt",
+                    "-lm",
+                    "-lGL",
+                    "-lglfw3",
                     "-lGLEW",
                     "-lpixa",
 
@@ -106,7 +107,7 @@
                     
                     "-O2",
                     "-I${workspaceFolder}/inc",
-                    "-o${workspaceFolder}/out/${workspaceFolderBasename}.exe"
+                    "-o${workspaceFolder}/out/linux/${workspaceFolderBasename}"
                 ],
             },
             "problemMatcher": [],
