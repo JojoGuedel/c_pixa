@@ -10,7 +10,7 @@
                 "args": [
                     "${workspaceFolder}/examples/shapes/main.c",
     
-                    "${workspaceFolder}/src/*.c",
+                    // "${workspaceFolder}/src/*.c",
                     
                     "-L${workspaceFolder}/lib/windows",
                     "-lUser32",
@@ -18,9 +18,9 @@
                     "-lShell32",
                     "-lopengl32",
                     
+                    "-lpixa32s",
                     "-lglfw3_mt",
                     "-lglew32s",
-                    "-lpixa32s",
     
                     "-Wall",
                     "-Wno-deprecated-declarations",
@@ -37,14 +37,14 @@
                 "args": [
                     "${workspaceFolder}/examples/shapes/main.c",
 
-                    "${workspaceFolder}/src/*.c",
+                    // "${workspaceFolder}/src/*.c",
                     
                     "-L${workspaceFolder}/lib/linux",
                     "-lm",
                     "-lGL",
+                    "-lpixa",
                     "-lglfw3",
                     "-lGLEW",
-                    "-lpixa",
 
                     "-Wall",
                     "-Wno-deprecated-declarations",
@@ -68,7 +68,7 @@
                 "args": [
                     "${workspaceFolder}/examples/shapes/main.c",
     
-                    "${workspaceFolder}/src/*.c",
+                    // "${workspaceFolder}/src/*.c",
                     
                     "-L${workspaceFolder}/lib/windows",
                     "-lUser32",
@@ -76,9 +76,9 @@
                     "-lShell32",
                     "-lopengl32",
                     
+                    "-lpixa32s",
                     "-lglfw3_mt",
                     "-lglew32s",
-                    "-lpixa32s",
                     
                     "-Wall",
                     "-Wno-deprecated-declarations",
@@ -93,14 +93,14 @@
                 "args": [
                     "${workspaceFolder}/examples/shapes/main.c",
 
-                    "${workspaceFolder}/src/*.c",
+                    // "${workspaceFolder}/src/*.c",
 
                     "-L${workspaceFolder}/lib/linux",
                     "-lm",
                     "-lGL",
+                    "-lpixa",
                     "-lglfw3",
                     "-lGLEW",
-                    "-lpixa",
 
                     "-Wall",
                     "-Wno-deprecated-declarations",
@@ -134,8 +134,8 @@
                     "${workspaceFolder}/lib/linux/libpixa.a",
                     "${workspaceFolder}/out/obj/*.o",
                 ],
-                "dependsOn": ["c_clang_obj"],
             },
+            "dependsOn": ["c_clang_obj"],
             "problemMatcher": [],
         },
         {

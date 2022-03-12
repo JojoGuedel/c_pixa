@@ -192,7 +192,6 @@ void sprite_draw_line(Sprite *sprite, int x1, int y1, int x2, int y2, Color colo
             sprite_draw_pixel(sprite, x, y, color);
         }
     }
-
 }
 
 void sprite_draw_rect(Sprite *sprite, int x, int y, int w, int h, Color color)
