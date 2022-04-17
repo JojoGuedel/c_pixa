@@ -3,8 +3,7 @@
 
 #include "Pixa/color.h"
 
-Color color_hsv(int h, int s, int v)
-{
+Color color_hsv(int h, int s, int v) {
     h = abs(h % 360);
 
     float _s = (float)s / 100.0f;

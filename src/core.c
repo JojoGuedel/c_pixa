@@ -30,30 +30,25 @@ double delta_time;
 
 GLFWwindow* window;
 
-void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *msg, const void *user_data)
-{
+void gl_debug_callback(GLenum src, GLenum type, GLuint id, GLenum severity, GLsizei length, const GLchar *msg, const void *user_data) {
     printf("[DEBUG] gl: %s\n", msg);
 }
 
-void glfw_error_callback(int error, const char *desc)
-{
+void glfw_error_callback(int error, const char *desc) {
     printf("[ERROR] glfw: %i %s\n", error, desc);
 }
 
-void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int flags)
-{
+void glfw_key_callback(GLFWwindow* window, int key, int scancode, int action, int flags) {
     if (on_key_callback != NULL)
         on_key_callback(key, action, flags);
 }
 
-void glfw_mouse_callback(GLFWwindow* window, int button, int action, int flags)
-{
+void glfw_mouse_callback(GLFWwindow* window, int button, int action, int flags) {
     if (on_mouse_callback != NULL)
         on_mouse_callback(button, action, flags);
 }
 
-void engine_create(int w, int h, int res_x, int res_y)
-{
+void engine_create(int w, int h, int res_x, int res_y) {
     // TODO: Error checking
     // TODO: Logging
 
@@ -111,8 +106,7 @@ void engine_create(int w, int h, int res_x, int res_y)
     // glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
 }
 
-void engine_destroy()
-{
+void engine_destroy() {
     for (int i = 0; i < scene_c; i++)
         scenes[i].on_destroy();
     free(scenes);
@@ -124,18 +118,15 @@ void engine_destroy()
     glfwTerminate();
 }
 
-void engine_start()
-{
-    while (active)
-    {
+void engine_start() {
+    while (active) {
         delta_time = glfwGetTime() - elapsed_time;
         elapsed_time = glfwGetTime();
 
         glfwPollEvents();
         glfwGetCursorPos(window,  &mouse_x, &mouse_y);
 
-        for (int i = 0; i < scene_c; i++)
-        {
+        for (int i = 0; i < scene_c; i++) {
             if (!scenes[i].is_active)
                 continue;
 
@@ -147,8 +138,7 @@ void engine_start()
         glActiveTexture(GL_TEXTURE0);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-        for (int i = 0; i < layer_draw_stack_count; i++)
-        {
+        for (int i = 0; i < layer_draw_stack_count; i++) {
             sprite_update(layer_draw_stack[i]->draw_target);
             sprite_draw(layer_draw_stack[i]->draw_target);
         }
@@ -165,23 +155,19 @@ void engine_start()
     glfwTerminate();
 }
 
-void engine_stop()
-{
+void engine_stop() {
     active = false;
 }
 
-void engine_set_user_input(void (*_on_key_callback)(int key, int action, int flags), void (*_on_mouse_callback)(int button, int action, int flags))
-{
+void engine_set_user_input(void (*_on_key_callback)(int key, int action, int flags), void (*_on_mouse_callback)(int button, int action, int flags)) {
     on_key_callback = _on_key_callback;
     on_mouse_callback = _on_mouse_callback;
 }
 
-int get_width()
-{
+int get_width() {
     return layer_target->draw_target->width;
 }
 
-int get_height()
-{
+int get_height() {
     return layer_target->draw_target->height;
 }

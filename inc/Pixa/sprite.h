@@ -5,8 +5,7 @@
 
 #include "Pixa/color.h"
 
-typedef struct
-{
+typedef struct {
     unsigned int id;
 
     int width;

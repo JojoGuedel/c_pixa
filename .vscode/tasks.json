@@ -132,7 +132,7 @@
                 "args": [
                     "-rv",
                     "${workspaceFolder}/lib/linux/libpixa.a",
-                    "${workspaceFolder}/out/obj/*.o",
+                    "${workspaceFolder}/out/linux/obj/*.o",
                 ],
             },
             "dependsOn": ["c_clang_obj"],
@@ -144,7 +144,7 @@
             "type": "shell",
             "linux": {
                 "options": {
-                    "cwd": "${workspaceFolder}/out/obj"
+                    "cwd": "${workspaceFolder}/out/linux/obj"
                 },
                 "command": "clang",
                 "args": [

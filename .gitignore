@@ -1,4 +1,10 @@
-/out/*
+/out/linux/*
+!/out/linux/obj
+/out/linux/obj/*
+/out/windows/*
+
 /doc/img/*
-/examples/compute_shader/*
 /compile_flags.txt
+
+/examples/compute_shader/*
+/examples/cube/*

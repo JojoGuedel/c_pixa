@@ -6,8 +6,7 @@
 
 #define LAYER_DEFAULT 0
 
-typedef struct
-{
+typedef struct {
     int layer_level;
 
     Color *clear_color;

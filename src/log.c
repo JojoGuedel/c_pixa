@@ -4,8 +4,7 @@
 #include "Pixa/core.h"
 #include "Pixa/log.h"
 
-void log_msg(const char *msg_type, const char *sender, const char *msg_format, ...)
-{
+void log_msg(const char *msg_type, const char *sender, const char *msg_format, ...) {
     int s = (int) elapsed_time % 60;
     int m = (int) (elapsed_time / 60) % 60;
     int h = (int) (elapsed_time / 360);
