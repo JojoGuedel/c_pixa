@@ -7,4 +7,4 @@
 /compile_flags.txt
 
 /examples/compute_shader/*
-/examples/cube/*
+/examples/cube/
