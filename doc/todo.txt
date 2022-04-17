@@ -11,6 +11,10 @@
 - optimized line drawing
 - optimized rectangle drawing
 - basic user input
+
+BUGFIXES:
+- layers uses id and Layer* at the same time: changed 0 to NULL so pointers get compared
+
 #============================================#
 #                 working on                 #
 #============================================#
@@ -20,13 +24,27 @@
 - advanced user input
 - basic text rendering
 - advanced text rendering
+- 3d support
+
+BUGS!!!!!!!!!!:
+
+cameras:
+- change concept of layers
+- implement camera2d
+- implement camera3d
+- move sprites from scenes to camera
 
 core:
+- limit framerate
 
 layer:
 - implement ussage of bool visible so that visibility can be set of each leayer
 
 keys:
 - fix keyboard layout
+- improve user input handling
+
+matrix:
+- implement matrix
 
 sprites:

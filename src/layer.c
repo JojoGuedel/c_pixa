@@ -74,7 +74,7 @@ bool layer_destroy(Layer *layer) {
 }
 
 void layer_bind(Layer *layer) {
-    if (layer == 0)
+    if (layer == NULL)
         layer_target = layer_default;
 
     layer_target = layer;

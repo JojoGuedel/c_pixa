@@ -9,23 +9,19 @@
 #include "Pixa/log.h"
 #include "Pixa/scene.h"
 
-void key_cb(int key, int action, int flags)
-{
+void key_cb(int key, int action, int flags) {
     log_info("%c: %i", key, action);
 }
 
-void mouse_cb(int button, int action, int flags)
-{
+void mouse_cb(int button, int action, int flags) {
     log_info("%c: %i", button, action);
 }
 
-void on_update()
-{
+void on_update() {
     clear();
 }
 
-int main(int argc, const char *args[])
-{
+int main(int argc, const char *args[]) {
     // create engine
     engine_create(500, 500, 1, 1);
     // set keyboard and mouse callback
