@@ -4,7 +4,7 @@
 #include "Pixa/color.h"
 #include "Pixa/sprite.h"
 
-#define LAYER_DEFAULT 0
+#define LAYER_DEFAULT NULL
 
 typedef struct {
     int layer_level;
