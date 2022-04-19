@@ -136,7 +136,17 @@ class Win:
         
         out_path = Path.parse(f"{workspace_dir.full_path()}/out/windows/{workspace_dir.name}.exe")
         if not out_path.parent.exists():
-            os.mkdir(out_path.parent.full_path())
+            create = []
+            last = out_path.parent
+
+            while not last.exists():
+                create.append(last.full_path())
+                last = last.parent
+            
+            create.reverse()
+
+            for i in create:
+                os.mkdir(i)
 
         definitions = ["DEBUG"] if debug else None
         additional_args = ["-g" if debug else None, "-O0" if debug else "-O3", "-Wall", "-Wno-deprecated-declarations"]
@@ -155,7 +165,17 @@ class Win:
 
         out_path = Path.parse(f"{workspace_dir.full_path()}/lib/windows/{PIXA_LIB_WIN}")
         if not out_path.parent.exists():
-            os.mkdir(out_path.parent.full_path())
+            create = []
+            last = out_path.parent
+
+            while not last.exists():
+                create.append(last.full_path())
+                last = last.parent
+            
+            create.reverse()
+
+            for i in create:
+                os.mkdir(i)
 
         cmd = build_cmd("clang", src_files, inc_path, out_path.full_path(), additional_args=["-fuse-ld=llvm-lib"])
 

@@ -133,3 +133,5 @@ Das hat das ganze sher vereinfacht.
 Jetzt fehlt nur noch das buildystem für Linux.
 Jedoch sollte das ganz einfach sein, da das buildsystem sehr modular aufgebaut ist.
 Wenn man jetzt Pixa compilen möchte, musst man zusätzlich noch python installieren.
+
+Programier Zeit: 4h
