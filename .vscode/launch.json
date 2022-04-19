@@ -2,10 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "run c (debug)",
+            "name": "run example (debug)",
             "type": "lldb",
             "request": "launch",
-            "preLaunchTask": "c_clang_debug",
+            "preLaunchTask": "build_example_debug",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -17,13 +17,14 @@
             },
             "linux": {
                 "program": "${workspaceFolder}/out/linux/${workspaceFolderBasename}",
-            }
+            },
+            "program": ""
         },
         {
-            "name": "run c (release)",
+            "name": "run example (release)",
             "type": "lldb",
             "request": "launch",
-            "preLaunchTask": "c_clang_release",
+            "preLaunchTask": "build_example_release",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
@@ -35,7 +36,8 @@
             },
             "linux": {
                 "program": "${workspaceFolder}/out/linux/${workspaceFolderBasename}",
-            }
-        }
+            },
+            "program": ""
+        },
     ]
 }

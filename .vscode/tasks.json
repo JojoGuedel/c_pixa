@@ -2,6 +2,34 @@
     "version": "2.0.0",
     "tasks": [
         {
+            "label": "build_example_debug",
+            "group": "build",
+            "type": "shell",
+            "command": "python",
+            "args": ["${workspaceFolder}/build.py", "example", "${fileDirname}", "d"],
+            "problemMatcher": []
+
+        },
+        {
+            "label": "build_example_release",
+            "group": "build",
+            "type": "shell",
+            "command": "python",
+            "args": ["${workspaceFolder}/build.py", "example", "${fileDirname}", "r"],
+            "problemMatcher": []
+
+        },
+        {
+            "label": "build_pixa",
+            "group": "build",
+            "type": "shell",
+            "command": "python",
+            "args": ["${workspaceFolder}/build.py", "pixa"],
+            "problemMatcher": []
+
+        },
+
+        {
             "label": "c_clang_debug",
             "group": "build",
             "type": "shell",

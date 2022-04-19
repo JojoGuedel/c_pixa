@@ -1,7 +1,7 @@
 This file is just for me, to remember what happened because because I'm writing a thesis about it.
 
 
-#+-------------------------------------------- 24.01.2022 --------------------------------------------+
++-------------------------------------------- 24.01.2022 --------------------------------------------+
 
 Das Einführen scale in den Textures löste den Bug mit den weissen Linien.
 -> Engine kann jetzt endlich sogar für Rendering benutzt werden :D.
@@ -34,7 +34,7 @@ Die Scene rendert mit bis zu 3500 FPS.
 
 Programmier Zeit: 10h
 
-#+-------------------------------------------- 26.01.2022 --------------------------------------------+
++-------------------------------------------- 26.01.2022 --------------------------------------------+
 
 Heute habe ich eine neue Version von Layern implementiert.
 Layers werden jetzt mehr wie Textures verwendet.
@@ -42,7 +42,7 @@ So ist die Engine für den Benutzer einheitlicher.
 
 Programmier Zeit: 3h
 
-#+-------------------------------------------- 27.01.2022 --------------------------------------------+
++-------------------------------------------- 27.01.2022 --------------------------------------------+
 
 Die Layers waren sehr verbuggt.
 Es gab einen Bug mit dem layer_draw_stack, da die Pointer immer noch zur alten Stelle gezeigt haben,
@@ -56,7 +56,7 @@ Jedoch muss ich, wenn man irgenwann die Texturen resizen kann, die clear_texture
 
 Programmier Zeit: 2h
 
-#+-------------------------------------------- 28.01.2022 --------------------------------------------+
++-------------------------------------------- 28.01.2022 --------------------------------------------+
 
 Heute habe ich nochmal eine neue und bessere Implementierung von den Layers geschrieben.
 Die Layers können jetzt viel einfacher kreiert werden als vorher.
@@ -77,7 +77,7 @@ Daraus erhoffe ich mir dann eine gute Performance.
 
 Programmier Zeit: 3h
 
-#+-------------------------------------------- 03.02.2022 --------------------------------------------+
++-------------------------------------------- 03.02.2022 --------------------------------------------+
 
 Ich habe die log Funktion verbessert.
 Jetzt kann man ein LOG_LEVEL definieren, und es werden z.B. nur noch Errors und keine Warnings mehr angezeigt.
@@ -93,7 +93,7 @@ Die Globals sind jetzt nicht mehr im globals.h header, sondern im core.h.
 
 Programmier Zeit: 4h
 
-#+-------------------------------------------- 04.02.2022 --------------------------------------------+
++-------------------------------------------- 04.02.2022 --------------------------------------------+
 
 Ich habe fill_rect implementiert.
 Jetzt kann man auch ausgefüllte Rechtecke zeichnen
@@ -104,7 +104,7 @@ Jedoch wird vermutlich sowieso alles nochmal ändern.
 
 Programmier Zeit: 2h
 
-#+-------------------------------------------- 12.02.2022 --------------------------------------------+
++-------------------------------------------- 12.02.2022 --------------------------------------------+
 
 Ich habe es endlich geschafft, Pixa zu einem lib-file mit clang zu compilen.
 Jetzt wird zuerst ein lib-file generiert und erst dann wird das gewünschte Projekt kompiliert und ausgeführt.
@@ -114,7 +114,7 @@ sondern nur noch pixa32s.lib gelinkt werden muss.
 
 Programier Zeit: 3h
 
-#+-------------------------------------------- 13.02.2022 --------------------------------------------+
++-------------------------------------------- 13.02.2022 --------------------------------------------+
 
 Jetzt gibt es endlich userinput.
 Jedoch muss ich noch schauen, wie ich das mit dem layout mache...
@@ -123,3 +123,13 @@ GLFW benutzt qwerty stat qwertz.
 Ich möchte das sowieso nochmals überarbeiten, dammit ich einen bool[] habe statt eine callback funktion.
 
 Programier Zeit: 1h
+
++-------------------------------------------- 19.04.2022 --------------------------------------------+
+
+Heute habe ich ein build-system in python geschrieben, dass es einfacher macht, für crossplatform zu compilen.
+Ich habe dafür die Path class bentutz, die ich genstern geschrieben habe.
+Sie kann Systempaths parsen, lesen, usw.
+Das hat das ganze sher vereinfacht.
+Jetzt fehlt nur noch das buildystem für Linux.
+Jedoch sollte das ganz einfach sein, da das buildsystem sehr modular aufgebaut ist.
+Wenn man jetzt Pixa compilen möchte, musst man zusätzlich noch python installieren.
