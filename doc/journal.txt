@@ -112,7 +112,7 @@ Das macht es deutlich einfacher, ein Projekt mit Pixa zu kreieren,
 da nicht jedes Mal der ganze sourcecode neu kompiliert werden muss,
 sondern nur noch pixa32s.lib gelinkt werden muss.
 
-Programier Zeit: 3h
+Programmier Zeit: 3h
 
 +-------------------------------------------- 13.02.2022 --------------------------------------------+
 
@@ -122,7 +122,7 @@ Momentan wird einfach das von GLFW übernommen.
 GLFW benutzt qwerty stat qwertz.
 Ich möchte das sowieso nochmals überarbeiten, dammit ich einen bool[] habe statt eine callback funktion.
 
-Programier Zeit: 1h
+Programmier Zeit: 1h
 
 +-------------------------------------------- 19.04.2022 --------------------------------------------+
 
@@ -134,4 +134,11 @@ Jetzt fehlt nur noch das buildystem für Linux.
 Jedoch sollte das ganz einfach sein, da das buildsystem sehr modular aufgebaut ist.
 Wenn man jetzt Pixa compilen möchte, musst man zusätzlich noch python installieren.
 
-Programier Zeit: 4h
+Programmier Zeit: 4h
+
++-------------------------------------------- 20.04.2022 --------------------------------------------+
+
+Das build-system funktioniert jetzt auch auf linux.
+Jetzt sieht das launch.json file endlich wieder übersichtlicher aus.
+
+Programmier Zeit: 2h
