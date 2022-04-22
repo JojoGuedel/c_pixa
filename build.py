@@ -30,7 +30,9 @@ class Path():
         if self.parent != None:
             return self.parent.full_path() + "/" + self.name
         
-        else: 
+        if os.name == "nt":
+            return self.name
+        elif os.name == "posix":
             return "/" + self.name
 
     def exists(self):
@@ -52,8 +54,12 @@ class Path():
     
     @staticmethod
     def parse(path: str):
+        if os.path.exists(path):
+            path = os.path.abspath(path)
+
         path = path.replace("\\", "/")
         path_split = path.split("/")
+
 
         if len(path_split) == 0:
             return None
@@ -171,6 +177,7 @@ class Win:
             last = out_path.parent
 
             while not last.exists():
+                print(last.full_path())
                 create.append(last.full_path())
                 last = last.parent
             
@@ -255,7 +262,7 @@ class Lin:
         global workspace_dir, PIXA_LIB_LIN
 
         obj_files = [f"{workspace_dir.full_path()}/out/linux/obj/*.o"]
-        inc_path = f"{workspace_dir.full_path()}/inc"
+        # inc_path = f"{workspace_dir.full_path()}/inc"
 
         out_path = Path.parse(f"{workspace_dir.full_path()}/lib/linux/{PIXA_LIB_LIN}")
         if not out_path.parent.exists():
