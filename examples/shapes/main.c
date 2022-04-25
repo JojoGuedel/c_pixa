@@ -19,12 +19,13 @@ void on_update() {
   // draw_line(0, 0, 0, 0 + get_height() - 1);
   // draw_line(get_width(), 0 + 1, get_width(), 0 + get_height() + 1);
 
-  draw_rect(0, 0, get_width(), get_height());
+  draw_rect(0, 0, 50, 50);
+  draw_circle(50, 50, 20);  
 }
 
 int main(int argc, const char *args[]) {
   // create engine
-  engine_create(500, 500, 1, 1);
+  engine_create(500, 500, 5, 5);
   // create scenes
   scene_create(NULL, on_update, NULL);
   // set clear color

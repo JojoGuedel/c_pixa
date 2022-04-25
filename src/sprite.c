@@ -204,6 +204,37 @@ void sprite_fill_rect(Sprite *sprite, int x, int y, int w, int h, Color color) {
             sprite->data[_y * sprite->width + _x] = color;
 }
 
+// Bresenham's circle drawing algorythm
+void sprite_draw_circle(Sprite *sprite, int x, int y, int r, Color color) {
+    if (r < 0 || x + r < 0 || y + r < 0 || x - r > sprite->width || y - r > sprite->height)
+        return;
+
+    if (r > 0) {
+        int xc = 0;
+        int yc = r;
+        int d = 3 - 2 * r;
+
+        while (yc >= xc)
+        {
+            sprite_draw_pixel(sprite, x + xc, y + yc, color);
+            sprite_draw_pixel(sprite, x - xc, y + yc, color);
+            sprite_draw_pixel(sprite, x + xc, y - yc, color);
+            sprite_draw_pixel(sprite, x - xc, y - yc, color);
+            sprite_draw_pixel(sprite, x + yc, y + xc, color);
+            sprite_draw_pixel(sprite, x - yc, y + xc, color);
+            sprite_draw_pixel(sprite, x + yc, y - xc, color);
+            sprite_draw_pixel(sprite, x - yc, y - xc, color);
+
+            if (d < 0)
+                d += 4 * xc++ + 6;
+            else
+                d += 4 * (xc++ - yc--) + 10;
+        }
+    }
+    else
+        sprite_draw_pixel(sprite, x, y, color);
+}
+
 void sprite_set_pos(Sprite *sprite, int x, int y) {
     sprite->x = x;
     sprite->y = y;

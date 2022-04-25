@@ -12,14 +12,15 @@
 - optimized rectangle drawing
 - basic user input
 
+- create builder for the project (win / linux)
+- cross platform "build system"
+
 BUGFIXES:
 - layers uses id and Layer* at the same time: changed 0 to NULL so pointers get compared
 
 #============================================#
 #                 working on                 #
 #============================================#
-- create builder for the project (win / linux)
-- cross platform "build system"
 #============================================#
 #                 milestones                 #
 #============================================#
@@ -48,5 +49,8 @@ keys:
 
 matrix:
 - implement matrix
+
+scenes:
+- dealocate the end of the array
 
 sprites:

@@ -24,3 +24,7 @@ void draw_rect(int x, int y, int width, int height) {
 void fill_rect(int x, int y, int width, int height) {
     sprite_fill_rect(layer_target->draw_target, x, y, width, height, color_target);
 }
+
+void draw_circle(int x, int y, int r) {
+    sprite_draw_circle(layer_target->draw_target, x, y, r, color_target);
+}

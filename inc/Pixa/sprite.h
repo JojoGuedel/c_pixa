@@ -37,6 +37,8 @@ void sprite_draw_line(Sprite *sprite, int x1, int y1, int x2, int y2, Color colo
 void sprite_draw_rect(Sprite *sprite, int x, int y, int width, int height, Color color);
 void sprite_fill_rect(Sprite *sprite, int x, int y, int width, int height, Color color);
 
+void sprite_draw_circle(Sprite *sprite, int x, int y, int r, Color color);
+
 void sprite_set_pos(Sprite *sprite, int x, int y);
 void sprite_set_scale(Sprite *sprite, float scale_x, float scale_y);
 

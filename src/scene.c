@@ -43,7 +43,7 @@ void scene_destroy(int id) {
     if (scenes[scene_c].on_destroy != NULL)
         scenes[id].on_destroy();
 
-    scenes[id].is_active            = false;
+    scenes[id].is_active             = false;
     scenes[id].on_create             = NULL;
     scenes[id].on_update             = NULL;
     scenes[id].on_destroy            = NULL;
