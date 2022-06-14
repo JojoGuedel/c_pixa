@@ -1,5 +1,6 @@
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define LOG_LEVEL LOG_INFO
 
@@ -19,8 +20,10 @@ void on_update() {
   // draw_line(0, 0, 0, 0 + get_height() - 1);
   // draw_line(get_width(), 0 + 1, get_width(), 0 + get_height() + 1);
 
-  draw_rect(0, 0, 50, 50);
-  draw_circle(50, 50, 20);  
+  // draw_rect(0, 0, 50, 50);
+  draw_circle(50, 50, 20);
+
+  draw_line(50, 50, 50 + 20 * cos(elapsed_time), 50 + 20 * sin(elapsed_time));
 }
 
 int main(int argc, const char *args[]) {

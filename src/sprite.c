@@ -160,13 +160,33 @@ void sprite_draw_line(Sprite *sprite, int x1, int y1, int x2, int y2, Color colo
     }
 
     if (abs(dx) > abs(dy)) {
-        for (int x = x1; x < x2; x++) {
+        if (dx < 0) {
+            int t = x1;
+            x1 = x2;
+            x2 = t;
+
+            t = y1;
+            y1 = y2;
+            y2 = t;
+        }
+
+        for (int x = x1; x <= x2; x++) {
             int y = y1 + dy * (x - x1) / dx;
             sprite_draw_pixel(sprite, x, y, color);
         }
     }
     else {
-        for (int y = y1; y < y2; y++) {
+        if (dy < 0) {
+            int t = x1;
+            x1 = x2;
+            x2 = t;
+
+            t = y1;
+            y1 = y2;
+            y2 = t;
+        }
+
+        for (int y = y1; y <= y2; y++) {
             int x = x1 + dx * (y - y1) / dy;
             sprite_draw_pixel(sprite, x, y, color);
         }

@@ -7,9 +7,7 @@
             "request": "launch",
             "preLaunchTask": "build_example_debug",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
             "console": "externalTerminal",
 
             "windows": {
@@ -26,9 +24,7 @@
             "request": "launch",
             "preLaunchTask": "build_example_release",
             "args": [],
-            "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
-            "environment": [],
             "console": "externalTerminal",
 
             "windows": {
